@@ -5,7 +5,7 @@ export default defineConfig({
   description: '面向设计师和开发者',
   rewrites: {
     'docs/(.*)': '(.*)',
-    'packages/chaos-ui/src/:component/(.*)': 'components/:component/(.*)',
+    'packages/ui/src/:component/(.*)': 'components/:component/(.*)',
     'packages/icons/docs/(.*)': 'components/icons/(.*)',
     'packages/utils/src/:path/(.*)': 'utils/:path/(.*)',
   },
@@ -52,7 +52,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/chaos-ui' },
+      { icon: 'github', link: 'https://github.com/chaosgods' },
     ],
   },
 })

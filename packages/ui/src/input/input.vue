@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watchEffect } from 'vue'
-import { useClassname } from '@chaos-ui/utils'
+import { useClassname } from '@chaosgods/utils'
 import { omit, pick } from 'lodash-es'
 import type { InputProps } from './typing'
 

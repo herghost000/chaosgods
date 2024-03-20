@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Loading } from '@chaos-ui/icons'
+import { Loading } from '@chaosgods/icons'
 </script>
 
 <template>

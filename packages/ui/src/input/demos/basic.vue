@@ -8,7 +8,7 @@ title: 输入框基础用法
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Input as CInput } from 'chaos-ui'
+import { Input as CInput } from '@chaosgods/ui'
 
 const value = ref('')
 const inputRef = ref()

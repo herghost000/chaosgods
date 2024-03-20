@@ -7,7 +7,7 @@ Tooltip支持两种触发方式，分别是`hover`和`click`。
 </docs>
 
 <script lang="ts" setup>
-import { Button as CButton, Tooltip as CTooltip } from 'chaos-ui'
+import { Button as CButton, Tooltip as CTooltip } from '@chaosgods/ui'
 </script>
 
 <template>

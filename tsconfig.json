@@ -10,10 +10,9 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "paths": {
-      "@chaos-ui/utils": ["packages/utils/src"],
-      "@chaos-ui/icons": ["packages/icons/src"],
-      "chaos-ui": ["packages/chaos-ui/src"],
-      "chaos-ui/*": ["packages/chaos-ui/src/*"]
+      "@chaosgods/utils": ["packages/utils/src"],
+      "@chaosgods/icons": ["packages/icons/src"],
+      "@chaosgods/ui": ["packages/ui/src"]
     },
     "resolveJsonModule": true,
     "types": ["vitest/globals"],

@@ -7,7 +7,7 @@ title: 按钮大小
 </docs>
 
 <script setup lang="ts">
-import { Button as CButton } from 'chaos-ui'
+import { Button as CButton } from '@chaosgods/ui'
 </script>
 
 <template>

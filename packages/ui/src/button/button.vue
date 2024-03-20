@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { PropType } from 'vue'
 import { defineComponent } from 'vue'
-import { useClassname } from '@chaos-ui/utils'
+import { useClassname } from '@chaosgods/utils'
 
 export default defineComponent({
   name: 'CButton',

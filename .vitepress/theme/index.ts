@@ -4,7 +4,7 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
 import { AntdTheme } from 'vite-plugin-vitepress-demo/theme'
-import 'chaos-ui/styles.ts'
+import '@chaosgods/ui/styles.ts'
 
 export default {
   extends: DefaultTheme,

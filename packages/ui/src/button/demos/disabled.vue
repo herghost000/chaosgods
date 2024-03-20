@@ -7,7 +7,7 @@ title: 禁用按钮
 </docs>
 
 <script setup lang="ts">
-import { Button as CButton } from 'chaos-ui'
+import { Button as CButton } from '@chaosgods/ui'
 </script>
 
 <template>

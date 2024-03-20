@@ -8,7 +8,7 @@ title: 输入框禁用
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Input as CInput } from 'chaos-ui'
+import { Input as CInput } from '@chaosgods/ui'
 
 const value = ref('')
 </script>

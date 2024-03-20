@@ -6,7 +6,7 @@ export function useClassname(component: string) {
   // 函数初始化完成以后，我们刚刚说了，我们的类名定义的形式是 前缀 + 组件名 + 后缀
   // 那么对于前缀我们是需要统一一下的，所以我们需要有一个变量来存储我们的前缀。
   // 我们这里先写死，后面我们再来实现动态配置
-  const prefix = 'chaos-'
+  const prefix = 'c-'
   // 前缀配置完成以后，接下来我们就需要配置我们的组件名，因为组件名称是传入的，所以我们需要给，
   // useClassname函数传入一个参数，我们这里可以定义一个component参数，然后我们把这个参数拼接到我们的前缀上
   const componentName = `${prefix}${component}`

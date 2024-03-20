@@ -2,7 +2,7 @@ import type { ExtractPropTypes, PropType, VNode } from 'vue'
 import { computed, createVNode, defineComponent, ref } from 'vue'
 import type { Placement } from '@floating-ui/vue'
 import { offset, useFloating } from '@floating-ui/vue'
-import { filterEmpty, isBaseType, useClassname } from '@chaos-ui/utils'
+import { filterEmpty, isBaseType, useClassname } from '@chaosgods/utils'
 
 const tooltipProps = {
   placement: {

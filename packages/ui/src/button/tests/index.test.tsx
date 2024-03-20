@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { Button } from 'chaos-ui'
+import { Button } from '@chaosgods/ui'
 
 describe('button', () => {
   it('type', () => {
