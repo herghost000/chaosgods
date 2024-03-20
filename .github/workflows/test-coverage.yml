@@ -16,7 +16,7 @@ jobs:
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:
-          node-version: 8
+          node-version: ${{matrix.node-version}}
           run_install: false
       - name: Get pnpm store directory
         shell: bash
