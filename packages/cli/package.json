@@ -1,15 +1,40 @@
 {
   "name": "@chaosgods/cli",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "author": "",
   "license": "ISC",
   "keywords": [],
-  "main": "index.js",
+  "main": "lib/index.js",
   "bin": {
-    "chaos": "src/index.ts"
+    "chaos": "outfile.cjs"
+  },
+  "files": [
+    "outfile.cjs"
+  ],
+  "engines": {
+    "node": ">=v16.20.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "zx scripts/build.mjs"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "import-local": "^3.1.0",
+    "minimist": "^1.2.8",
+    "node-homedir": "^2.0.0",
+    "npmlog": "^7.0.1",
+    "path-exists": "4.0.0",
+    "prompts": "^2.4.2",
+    "root-check": "^2.0.0",
+    "semver": "^7.6.0"
+  },
+  "devDependencies": {
+    "@types/minimist": "^1.2.5",
+    "@types/npmlog": "^7.0.0",
+    "@types/prompts": "^2.4.9",
+    "@types/root-check": "^1.0.2",
+    "@types/semver": "^7.5.8"
   }
 }

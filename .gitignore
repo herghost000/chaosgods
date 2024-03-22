@@ -25,3 +25,4 @@ dist-ssr
 .vitepress/dist
 .vitepress/cache
 coverage
+outfile.cjs
