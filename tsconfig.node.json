@@ -4,9 +4,10 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "types": ["node"],
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true
   },
-  "include": ["vite.config.ts", "scripts/**/*.mjs"]
+  "include": ["vite.config.ts", "vitest.config.ts", "**/scripts/**/*.ts"]
 }

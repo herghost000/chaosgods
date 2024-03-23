@@ -1,17 +1,26 @@
 {
   "name": "@chaosgods/ui",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "author": "",
   "license": "ISC",
   "keywords": [],
   "main": "index.js",
+  "files": [
+    "dist",
+    "es",
+    "lib"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vite build"
   },
   "dependencies": {
+    "@chaosgods/icons": "workspace:^",
+    "@chaosgods/utils": "workspace:^",
     "@floating-ui/vue": "^1.0.6",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12"

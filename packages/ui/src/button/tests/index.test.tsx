@@ -8,21 +8,21 @@ describe('button', () => {
     const button = wrapper.find('button')
     // 然后我们再拿到element的元素，然后我们找到classList我们判断一下是不是包含我们想要的元素
     // 我们写完后大家可以看到单测通过了，就证明我们的primary的形式下拿到对应的元素了。
-    expect(button.element.classList.contains('chaos-button--primary')).toBe(true)
+    expect(button.element.classList.contains('c-button--primary')).toBe(true)
     // 测试完成后我们记得要销毁一下元素
     wrapper.unmount()
 
     const wrapper1 = mount(<Button type="dashed">测试</Button>)
     // 找到button按钮
     const button1 = wrapper1.find('button')
-    expect(button1.element.classList.contains('chaos-button--dashed')).toBe(true)
+    expect(button1.element.classList.contains('c-button--dashed')).toBe(true)
     wrapper1.unmount()
   })
 
   it('size', () => {
     const wrapper = mount(<Button size="small">测试</Button>)
     const button = wrapper.find('button')
-    expect(button.element.classList.contains('chaos-button-size--small')).toBe(true)
+    expect(button.element.classList.contains('c-button-size--small')).toBe(true)
     wrapper.unmount()
   })
 

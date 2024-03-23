@@ -3,16 +3,16 @@ import path from 'node:path'
 import { defineConfig } from 'vite'
 import { vitepressDemo } from 'vite-plugin-vitepress-demo'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-// import { tsxAutoProps } from 'vite-plugin-tsx-auto-props'
+import vue from '@vitejs/plugin-vue'
 
-const baseUrl = fileURLToPath(new URL('.', import.meta.url))
+const baseUrl = fileURLToPath(new URL('./', import.meta.url))
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    // tsxAutoProps(),
     vitepressDemo({
       glob: ['**/demos/*.vue'],
     }),
+    vue(),
     vueJsx(),
   ],
   resolve: {

@@ -1,10 +1,10 @@
 @import "../../style/index.less";
 
-.chaos-input{
+.c-input{
   display: inline-flex;
   box-sizing: border-box;
   align-items: center;
-  border: 1px solid var(--chaos-color-border);
+  border: 1px solid var(--c-color-border);
   border-radius: 4px;
   padding-inline: 10px;
   transition: border-color 0.3s ease-in-out;
@@ -30,9 +30,9 @@
 
   &--disabled{
     cursor: not-allowed;
-    border-color: var(--chaos-input-color-text-disabled, var(--chaos-color-text-disabled));
-    color: var(--chaos-input-color-text-disabled, var(--chaos-color-text-disabled));
-    background-color: var(--chaos-input-color-bg-disabled, #f5f5f5);
+    border-color: var(--c-input-color-text-disabled, var(--c-color-text-disabled));
+    color: var(--c-input-color-text-disabled, var(--c-color-text-disabled));
+    background-color: var(--c-input-color-bg-disabled, #f5f5f5);
   }
 
   &--large{
@@ -55,12 +55,12 @@
   }
 
   &:focus-within{
-    border-color: var(--chaos-color-primary);
+    border-color: var(--c-color-primary);
   }
 
   &-wrapper{
     &::placeholder{
-      color: var(--chaos-input-placeholder-color, #bfbfbf);
+      color: var(--c-input-placeholder-color, #bfbfbf);
     }
 
     &:disabled{
