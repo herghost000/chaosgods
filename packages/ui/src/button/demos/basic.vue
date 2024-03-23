@@ -7,8 +7,6 @@ title: 基本使用
 </docs>
 
 <script setup lang="ts">
-import { Button as CButton } from '@chaosgods/ui'
-
 function myClick() {
   // todo
 }

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'Chaos UI',
+  title: 'CHAOSGODS DOCS',
   description: '面向设计师和开发者',
   rewrites: {
     'docs/(.*)': '(.*)',

@@ -6,10 +6,6 @@ title: 插槽使用
 插槽模式使用Tooltip组件
 </docs>
 
-<script lang="ts" setup>
-import { Button as CButton, Tooltip as CTooltip } from '@chaosgods/ui'
-</script>
-
 <template>
   <div>
     <CTooltip placement="top">

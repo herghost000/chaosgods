@@ -6,10 +6,6 @@ title: 位置
 Tooltip组件提供了12个方向来使用。
 </docs>
 
-<script lang="ts" setup>
-import { Button as CButton, Tooltip as CTooltip } from '@chaosgods/ui'
-</script>
-
 <template>
   <div style="display: flex;gap: 10px;flex-wrap: wrap">
     <CTooltip content="test placement">

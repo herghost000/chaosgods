@@ -8,7 +8,6 @@ title: 输入框尺寸
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Input as CInput } from '@chaosgods/ui'
 
 const value = ref('')
 </script>

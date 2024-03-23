@@ -8,12 +8,14 @@
   "keywords": [],
   "main": "index.js",
   "files": [
-    "dist",
     "es",
-    "lib"
+    "lib",
+    "umd"
   ],
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "build:umd": "vite build --config vite.umd.config.ts",
+    "build:style": "vite build --config vite.style.config.ts"
   },
   "dependencies": {
     "@chaosgods/icons": "workspace:^",

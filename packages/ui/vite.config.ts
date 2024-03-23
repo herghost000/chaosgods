@@ -14,6 +14,9 @@ export default defineConfig({
     vueJsx(),
   ],
   build: {
+    lib: {
+      entry: 'src/index.ts',
+    },
     rollupOptions: {
       external: ['@floating-ui/vue', 'vue', 'lodash-es', '@chaosgods/utils'],
       output: [
@@ -33,9 +36,6 @@ export default defineConfig({
           dir: 'lib',
         },
       ],
-    },
-    lib: {
-      entry: 'src/index.ts',
     },
   },
 })
