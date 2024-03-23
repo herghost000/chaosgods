@@ -1,12 +1,40 @@
 {
   "name": "@chaosgods/icons",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "keywords": [],
-  "main": "index.js",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./es/index.d.ts",
+      "import": "./es/index.js",
+      "require": "./lib/index.js"
+    },
+    "./es/*": "./es/*",
+    "./umd/*": "./umd/*",
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json"
+  },
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "browser": "umd/chaosgods-icons.js",
+  "types": "es/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "es",
+    "lib",
+    "umd"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vite build",
+    "build:umd": "vite build --config vite.umd.config.ts"
+  },
+  "dependencies": {
+    "vue": "^3.4.21"
   }
 }

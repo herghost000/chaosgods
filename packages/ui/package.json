@@ -4,9 +4,27 @@
   "version": "1.0.0",
   "description": "",
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "keywords": [],
-  "main": "index.js",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./es/index.d.ts",
+      "import": "./es/index.js",
+      "require": "./lib/index.js"
+    },
+    "./es/*": "./es/*",
+    "./umd/*": "./umd/*",
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json"
+  },
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "browser": "umd/chaosgods-ui.js",
+  "types": "es/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "es",
     "lib",
