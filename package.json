@@ -13,7 +13,16 @@
     "ui:css": "esno ./scripts/style-bundle.ts",
     "test:unit": "vitest",
     "coverage": "vitest --coverage",
-    "clean": "rm -rf node_modules **/*/node_modules"
+    "clean": "pnpm clean:build",
+    "clean:build": "rimraf 'packages/*/{node_modules}' && rimraf node_modules",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:release": "pnpm changeset:release:only",
+    "changeset:release:only": "changeset publish --registry=https://registry.npmjs.com/",
+    "changeset:pre:alpha": "changeset pre enter alpha",
+    "changeset:pre:beta": "changeset pre enter beta",
+    "changeset:pre:rc": "changeset pre enter rc",
+    "changeset:pre:exit": "changeset pre exit"
   },
   "dependencies": {
     "vue": "^3.4.21"
@@ -21,6 +30,7 @@
   "devDependencies": {
     "@ant-design/colors": "^7.0.2",
     "@antfu/eslint-config": "^2.8.3",
+    "@changesets/cli": "^2.27.1",
     "@tsconfig/node20": "^20.1.2",
     "@types/fs-extra": "^11.0.4",
     "@types/less": "^3.0.6",
@@ -39,6 +49,7 @@
     "less": "^4.2.0",
     "lint-staged": "^15.2.2",
     "postcss": "^8.4.36",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
     "unbuild": "^2.0.0",
     "unplugin-vue-components": "^0.26.0",
