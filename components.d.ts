@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CButton: typeof import('@chaosgods/ui')['Button']
+    CInput: typeof import('@chaosgods/ui')['Input']
     CTooltip: typeof import('@chaosgods/ui')['Tooltip']
   }
 }

@@ -1,9 +1,9 @@
-import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { defineConfig } from 'vite'
-import { vitepressDemo } from 'vite-plugin-vitepress-demo'
+import { fileURLToPath } from 'node:url'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
+import { defineConfig } from 'vite'
+import { vitepressDemo } from 'vite-plugin-vitepress-demo'
 import { uiResolver } from './scripts/ui-resolver'
 
 const baseUrl = fileURLToPath(new URL('./', import.meta.url))
@@ -11,6 +11,7 @@ const baseUrl = fileURLToPath(new URL('./', import.meta.url))
 export default defineConfig({
   plugins: [
     Components({
+      dts: true,
       resolvers: [
         uiResolver(),
       ],
