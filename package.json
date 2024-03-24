@@ -67,5 +67,10 @@
     "./**/*.{ts,json,vue,md,jsx,tsx,js,css,less}": [
       "eslint --fix"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
