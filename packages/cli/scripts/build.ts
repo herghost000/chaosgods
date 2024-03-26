@@ -1,14 +1,22 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import * as esbuild from 'esbuild'
+
+const baseUrl = fileURLToPath(new URL('./', import.meta.url))
 
 await esbuild.build({
   bundle: true,
-  entryPoints: ['index.cjs'],
+  entryPoints: ['index.ts'],
+  external: ['npminstall'],
   //   external: ['locales/*'],
   outfile: 'outfile.cjs',
   format: 'cjs',
   platform: 'node',
+  minify: false,
   target: 'node14',
-
+  alias: {
+    '@': path.resolve(baseUrl, '../src'),
+  },
   plugins: [
     {
       name: 'alias',

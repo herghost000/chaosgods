@@ -5,20 +5,25 @@ import colors from 'colors/safe'
 import { homedir } from 'node-homedir'
 import pathExists from 'path-exists'
 import rootCheck from 'root-check'
-import minimist from 'minimist'
 import dotenv from 'dotenv'
-import log from '../utils/log'
-import pkg from '../package.json'
-import { getPackageInfo } from '../utils/npm'
+import { Command } from 'commander'
 import { DEFAULT_CLI_HOME, MIN_NODE_VERSION } from './const'
+import pkg from '@/../package.json'
+import { getSemverVersion } from '@/utils/npm'
+import log from '@/utils/log'
+import exec from '@/core/exec'
 
 export default async function core() {
+  await prepare()
+  registerCommands()
+}
+
+async function prepare() {
   try {
     checkPkgVersion()
     checkNodeVersion()
     checkRoot()
     checkUserHome()
-    checkInputArgs()
     checkEnv()
     await checkVersionUpdate()
   }
@@ -27,10 +32,8 @@ export default async function core() {
   }
 }
 
-let args: minimist.ParsedArgs
-
 function checkPkgVersion() {
-  log.info('脚手架版本', pkg.version)
+  log.info('版本', pkg.version)
 }
 
 function checkNodeVersion() {
@@ -45,18 +48,6 @@ function checkRoot() {
 function checkUserHome() {
   if (!homedir() || !pathExists.sync(homedir()))
     throw new Error('用户主目录不存在')
-}
-
-function checkInputArgs() {
-  args = minimist(process.argv.slice(2))
-  checkArgs()
-}
-
-function checkArgs() {
-  if (args.debug)
-    log.level = 'verbose'
-  else
-    log.level = 'info'
 }
 
 function checkEnv() {
@@ -82,7 +73,43 @@ function createDefaultConfig() {
 }
 
 async function checkVersionUpdate() {
-//   const pkgVer = pkg.version
+  const pkgVer = pkg.version
   const pkgName = pkg.name
-  await getPackageInfo(pkgName, 'https://google.com')
+  const version = await getSemverVersion(pkgVer, pkgName)
+  if (version)
+    log.warn('版本', colors.yellow(`发现新的版本 npm install -g ${pkgName} 更新至：${version}`))
+}
+
+function registerCommands() {
+  const program = new Command()
+  program
+    .name(Object.keys(pkg.bin)[0])
+    .usage('<command> [options]')
+    .description('CLI to some JavaScript string utilities')
+    .version(pkg.version)
+    .option('-d, --debug', '是否开启调试模式', false)
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '')
+
+  program
+    .command('init [projectName]')
+    .option('-f, --force', '是否强制初始化', false)
+    .action(exec)
+
+  program.on('option:debug', () => {
+    process.env.CLI_LOG_LEVEL = log.level = 'verbose'
+  })
+
+  program.on('option:targetPath', () => {
+    const { targetPath } = program.opts()
+    process.env.CLI_TARGETPATH = targetPath
+  })
+
+  program.on('command:*', () => {
+    log.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '))
+  })
+
+  program.parse(process.argv)
+
+  if (program.args && program.args.length < 1)
+    program.outputHelp()
 }
