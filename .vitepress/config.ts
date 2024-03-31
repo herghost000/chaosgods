@@ -1,6 +1,9 @@
+import process from 'node:process'
 import { defineConfig } from 'vitepress'
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' && process.env.BUILD_VERCEL === undefined ? '/chaosgods/' : '/',
   title: 'CHAOSGODS DOCS',
   description: '面向设计师和开发者',
   rewrites: {
