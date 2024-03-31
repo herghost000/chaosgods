@@ -15,9 +15,11 @@ export default async function exec(...args: any[]) {
   if (handler)
     return handler(...args)
 
-  const setting: Record<string, string> = {}
-  const name = setting[programName] ?? ''
-  log.info('pkgName', name)
+  const remotePackages: Record<string, string> = {
+    init: '@team-cli/init',
+  }
+  const packageName = remotePackages[programName] ?? ''
+  log.info('pkgName', packageName)
   const version = 'latest'
   let targetPath = process.env.CLI_TARGETPATH ?? ''
   const homePath = process.env.CLI_HOME_PATH ?? ''
@@ -28,7 +30,7 @@ export default async function exec(...args: any[]) {
     storePath = path.resolve(targetPath, 'node_modules')
 
     pkg = new Package({
-      name,
+      name: packageName,
       targetPath,
       storePath,
       version,
@@ -40,7 +42,7 @@ export default async function exec(...args: any[]) {
   }
   else {
     pkg = new Package({
-      name,
+      name: packageName,
       targetPath,
       storePath,
       version,
