@@ -51,7 +51,7 @@ export default async function exec(...args: any[]) {
   const rootPath = pkg.getRootPath()
   if (rootPath) {
     const code = `require(${rootPath})(${JSON.stringify(args)})`
-    const child = cp.spawn('node', ['-e', code], {
+    const child = spawn('node', ['-e', code], {
       cwd: process.cwd(),
       stdio: 'inherit',
     })
@@ -61,4 +61,11 @@ export default async function exec(...args: any[]) {
       process.exit(1)
     })
   }
+}
+
+function spawn(command: string, args: string[], options: cp.SpawnOptions) {
+  const win32 = process.platform === 'win32'
+  const cmd = win32 ? 'cmd' : command
+  const cmdArgs = win32 ? ['/c'].concat(command, args) : args
+  return cp.spawn(cmd, cmdArgs, options)
 }
