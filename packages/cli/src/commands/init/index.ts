@@ -1,6 +1,19 @@
-import process from 'node:process'
-import log from '@/utils/log'
+import Command from '@/models/command'
 
-export default function init(projectName: string, options: any) {
-  log.info('init command called', projectName, options, process.env.CLI_TARGETPATH)
+export class InitCommand extends Command {
+  constructor(args: any[]) {
+    super(args)
+  }
+
+  public init(): void {
+    // console.log('this', this)
+  }
+
+  public exec(): void {
+    throw new Error('Method not implemented.')
+  }
+}
+
+export default function init(args: any[]) {
+  new InitCommand(args).init()
 }

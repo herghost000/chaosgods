@@ -1,25 +1,24 @@
 import process from 'node:process'
 import path from 'node:path'
-import { createRequire } from 'node:module'
+import cp from 'node:child_process'
 import type { Command } from 'commander'
-import log from '@/utils/log'
 import Package from '@/models/package'
 import * as commands from '@/commands'
+import log from '@/utils/log'
 
 const CACHE_DIR = 'dependencies'
-type Handler = undefined | ((...args: any[]) => void | Promise<void>)
+type Handler = undefined | ((args: any[]) => void | Promise<void>)
 export default async function exec(...args: any[]) {
   const program = args[args.length - 1] as Command
   const programName = program.name()
   const handler = (commands as Record<string, Handler>)[programName]
   if (handler)
-    return handler(...args)
+    return handler(args)
 
   const remotePackages: Record<string, string> = {
     init: '@team-cli/init',
   }
   const packageName = remotePackages[programName] ?? ''
-  log.info('pkgName', packageName)
   const version = 'latest'
   let targetPath = process.env.CLI_TARGETPATH ?? ''
   const homePath = process.env.CLI_HOME_PATH ?? ''
@@ -50,11 +49,16 @@ export default async function exec(...args: any[]) {
   }
 
   const rootPath = pkg.getRootPath()
-  log.info('rootPath', rootPath)
-  log.info('pkg', pkg)
   if (rootPath) {
-    const require = createRequire(__filename)
-    const hander = require(rootPath) as Handler
-    hander && hander(...args)
+    const code = `require(${rootPath})(${JSON.stringify(args)})`
+    const child = cp.spawn('node', ['-e', code], {
+      cwd: process.cwd(),
+      stdio: 'inherit',
+    })
+    child.on('exit', () => process.exit(0))
+    child.on('error', (error) => {
+      log.error('exec', error.message)
+      process.exit(1)
+    })
   }
 }
