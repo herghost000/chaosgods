@@ -3,7 +3,7 @@ import path from 'node:path'
 import { lt } from 'semver'
 import colors from 'colors/safe'
 import { homedir } from 'node-homedir'
-import pathExists from 'path-exists'
+import { pathExistsSync } from 'fs-extra'
 import rootCheck from 'root-check'
 import dotenv from 'dotenv'
 import { Command } from 'commander'
@@ -46,13 +46,13 @@ function checkRoot() {
 }
 
 function checkUserHome() {
-  if (!homedir() || !pathExists.sync(homedir()))
+  if (!homedir() || !pathExistsSync(homedir()))
     throw new Error('用户主目录不存在')
 }
 
 function checkEnv() {
   const dotenvPath = path.resolve(homedir(), '.env')
-  if (pathExists.sync(dotenvPath)) {
+  if (pathExistsSync(dotenvPath)) {
     dotenv.config({
       path: dotenvPath,
     })

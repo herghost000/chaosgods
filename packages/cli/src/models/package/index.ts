@@ -2,7 +2,6 @@ import path from 'node:path'
 import { createRequire } from 'node:module'
 import { packageDirectorySync } from 'pkg-dir'
 import npminstall from 'npminstall'
-import pathExists from 'path-exists'
 import fse, { pathExistsSync } from 'fs-extra'
 import { gt } from 'semver'
 import { getDefaultRegistry, getLatestVersion } from '@/utils/npm'
@@ -31,7 +30,7 @@ export default class Package {
   }
 
   public async prepare() {
-    if (this.storePath && !pathExists.sync(this.storePath))
+    if (this.storePath && !pathExistsSync(this.storePath))
       fse.mkdirpSync(this.storePath)
 
     if (this.version === 'latest')
@@ -41,9 +40,9 @@ export default class Package {
   public async exists() {
     if (this.storePath) {
       await this.prepare()
-      return pathExists.sync(this.cacheFilePath)
+      return pathExistsSync(this.cacheFilePath)
     }
-    else { return pathExists.sync(this.targetPath) }
+    else { return pathExistsSync(this.targetPath) }
   }
 
   public async install() {

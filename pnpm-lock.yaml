@@ -153,9 +153,6 @@ importers:
       npmlog:
         specifier: ^7.0.1
         version: 7.0.1
-      path-exists:
-        specifier: 5.0.0
-        version: 5.0.0
       pkg-dir:
         specifier: ^8.0.0
         version: 8.0.0
@@ -7850,6 +7847,7 @@ packages:
   /path-exists@5.0.0:
     resolution: {integrity: sha512-RjhtfwJOxzcFmNOi6ltcbcu4Iu+FL3zEj83dk4kAS+fVpTxXLO1b38RvJgT/0QwvV/L3aY9TAnyv0EOqW4GoMQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: true
 
   /path-is-absolute@1.0.1:
     resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==}
