@@ -1,13 +1,14 @@
 import path from 'node:path'
 import { createRequire } from 'node:module'
+import fs from 'node:fs'
 import { packageDirectorySync } from 'pkg-dir'
 import npminstall from 'npminstall'
 import fse, { pathExistsSync } from 'fs-extra'
 import { gt } from 'semver'
 import simpleGit from 'simple-git'
 import urlJoin from 'url-join'
+import ora from 'ora'
 import { getDefaultRegistry, getLatestVersion } from '@/utils/npm'
-import log from '@/utils/log'
 import { GITHUB_BASE_URL } from '@/core/cli/const'
 
 const require = createRequire(__filename)
@@ -77,7 +78,7 @@ export default class Package {
   }
 
   private get _cacheFilePathOfGithub() {
-    return path.resolve(this.targetPath, this.name)
+    return path.resolve(this.targetPath, this.account, this.name)
   }
 
   constructor(options: Partial<PackageOptions>) {
@@ -95,9 +96,9 @@ export default class Package {
   public async exists() {
     if (this.storePath) {
       await this.prepare()
-      return pathExistsSync(this.cacheFilePath)
+      return pathExistsSync(this.cacheFilePath) && !this.isEmptyDir(this.cacheFilePath)
     }
-    else { return pathExistsSync(this.isGithub ? this.cacheFilePath : this.targetPath) }
+    else { return pathExistsSync(this.isGithub ? this.cacheFilePath : this.targetPath) && !this.isEmptyDir(this.cacheFilePath) }
   }
 
   public async install() {
@@ -127,12 +128,13 @@ export default class Package {
   }
 
   private async _installOfGithub() {
+    const cloneSpinner = ora(`克隆远程仓库 ${this.url}...`).start()
     const git = simpleGit(this.cacheFilePath)
     git.clone(this.url, this.cacheFilePath, ['--branch', this.branch], (err) => {
       if (err)
-        log.error('Package', '拉取远程仓库失败')
+        cloneSpinner.stopAndPersist({ symbol: '❌' })
       else
-        log.info('Package', '成功拉取远程仓库到本地')
+        cloneSpinner.succeed()
     })
   }
 
@@ -165,18 +167,20 @@ export default class Package {
   }
 
   private async _updateOfGithub() {
+    const checkoutSpinner = ora(`检出分支${this.branch}...`).start()
     const git = simpleGit(this.cacheFilePath)
     git.checkout(this.branch, (err) => {
       if (err) {
-        console.error('切换分支失败:', err)
+        checkoutSpinner.stopAndPersist({ symbol: '❌' })
         return
       }
-
-      git.pull((err, update) => {
+      checkoutSpinner.succeed()
+      const pullSpinner = ora(`更新分支${this.branch}...`).start()
+      git.pull((err, _) => {
         if (err)
-          log.error('Package', '更新本地仓库失败:')
+          pullSpinner.stopAndPersist({ symbol: '❌' })
         else
-          log.info('Package', update ? '本地仓库已更新' : '本地仓库已是最新版本')
+          pullSpinner.succeed()
       })
     })
   }
@@ -199,5 +203,10 @@ export default class Package {
       return path.resolve(dir, pkg.main)
     }
     return ''
+  }
+
+  public isEmptyDir(path: string) {
+    const fileList = fs.readdirSync(path)
+    return !fileList.length
   }
 }

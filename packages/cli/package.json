@@ -32,6 +32,7 @@
     "node-homedir": "^2.0.0",
     "npminstall": "^7.12.0",
     "npmlog": "^7.0.1",
+    "ora": "^8.0.1",
     "pkg-dir": "^8.0.0",
     "root-check": "^2.0.0",
     "semver": "^7.6.0",
