@@ -12,7 +12,8 @@
     "paths": {
       "@chaosgods/utils": ["packages/utils/src"],
       "@chaosgods/icons": ["packages/icons/src"],
-      "@chaosgods/ui": ["packages/ui/src"]
+      "@chaosgods/ui": ["packages/ui/src"],
+      "@chaosgods/cli": ["packages/cli/src"]
     },
     "resolveJsonModule": true,
     "types": ["vitest/globals"],

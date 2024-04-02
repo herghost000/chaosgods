@@ -12,6 +12,7 @@
     "chaos": "outfile.cjs"
   },
   "files": [
+    "api",
     "outfile.cjs"
   ],
   "engines": {

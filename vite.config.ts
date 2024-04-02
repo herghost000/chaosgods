@@ -35,6 +35,10 @@ export default defineConfig({
         find: /^@chaosgods\/icons/,
         replacement: path.resolve(baseUrl, 'packages/icons/src'),
       },
+      {
+        find: /^@chaosgods\/cli/,
+        replacement: path.resolve(baseUrl, 'packages/cli/src'),
+      },
     ],
   },
 })

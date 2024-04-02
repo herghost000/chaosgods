@@ -51,18 +51,16 @@ function checkEnv() {
     })
   }
   createDefaultConfig()
-  log.verbose('CLI_HOME_PATH', process.env.CLI_HOME_PATH)
 }
 
 function createDefaultConfig() {
-  const cliConfig = {
-    home: homedir(),
-    cliHome: path.join(homedir(), process.env.CLI_HOME ?? ''),
-  }
-  if (!process.env.CLI_HOME)
-    cliConfig.cliHome = path.join(cliConfig.home, DEFAULT_CLI_HOME)
+  const home = homedir()
 
-  process.env.CLI_HOME_PATH = cliConfig.cliHome
+  if (!process.env.CLI_HOME)
+    process.env.CLI_HOME = DEFAULT_CLI_HOME
+
+  if (!process.env.CLI_HOME_PATH)
+    process.env.CLI_HOME_PATH = path.join(home, DEFAULT_CLI_HOME)
 }
 
 async function checkVersionUpdate() {

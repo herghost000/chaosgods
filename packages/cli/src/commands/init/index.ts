@@ -5,12 +5,15 @@ import fse from 'fs-extra'
 import { valid } from 'semver'
 import Command from '@/models/command'
 import log from '@/utils/log'
+import { getProjectTpls } from '@/utils/github'
 
 const TYPE_PROJECT = 1
 const TYPE_COMPONENT = 2
 
 export class InitCommand extends Command {
   public force: boolean = false
+  public tpls: Record<string, string>[] = []
+
   constructor(args: any[]) {
     super(args)
   }
@@ -33,6 +36,10 @@ export class InitCommand extends Command {
   }
 
   public async prepare() {
+    this.tpls = await getProjectTpls()
+    if (!this.tpls || this.tpls.length === 0)
+      throw new Error('项目模版不存在')
+
     const localPath = process.cwd()
     if (!this.isEmptyDir(localPath)) {
       let answer = false
@@ -97,6 +104,10 @@ export class InitCommand extends Command {
             return value
         },
       })
+    }
+    else {
+      const a = await getProjectTpls()
+      log.info('a', a)
     }
     return ret
   }
