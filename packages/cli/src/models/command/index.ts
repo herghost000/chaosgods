@@ -24,7 +24,7 @@ export default abstract class Command {
         log.error('Command', error.message)
       })
     })
-    log.info('a', runner)
+    runner.then(() => {})
   }
 
   public checkNodeVersion() {

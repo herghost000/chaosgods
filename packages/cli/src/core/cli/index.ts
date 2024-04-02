@@ -1,13 +1,12 @@
 import process from 'node:process'
 import path from 'node:path'
-import { lt } from 'semver'
 import colors from 'colors/safe'
 import { homedir } from 'node-homedir'
 import { pathExistsSync } from 'fs-extra'
 import rootCheck from 'root-check'
 import dotenv from 'dotenv'
 import { Command } from 'commander'
-import { DEFAULT_CLI_HOME, MIN_NODE_VERSION } from './const'
+import { DEFAULT_CLI_HOME } from './const'
 import pkg from '@/../package.json'
 import { getSemverVersion } from '@/utils/npm'
 import log from '@/utils/log'
@@ -21,7 +20,6 @@ export default async function core() {
 async function prepare() {
   try {
     checkPkgVersion()
-    checkNodeVersion()
     checkRoot()
     checkUserHome()
     checkEnv()
@@ -34,11 +32,6 @@ async function prepare() {
 
 function checkPkgVersion() {
   log.info('版本', pkg.version)
-}
-
-function checkNodeVersion() {
-  if (lt(process.version, MIN_NODE_VERSION))
-    throw new Error(colors.red(`Node最低版本号为 ${MIN_NODE_VERSION}`))
 }
 
 function checkRoot() {

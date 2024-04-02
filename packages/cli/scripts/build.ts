@@ -23,11 +23,12 @@ await esbuild.build({
     'semver',
     // 'url-join',
     // 'locales/*'
+    '@inquirer/prompts',
   ],
   outfile: 'outfile.cjs',
   format: 'cjs',
   platform: 'node',
-  minify: true,
+  minify: false,
   target: 'node14',
   alias: {
     '@': path.resolve(baseUrl, '../src'),
