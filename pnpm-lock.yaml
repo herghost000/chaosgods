@@ -165,6 +165,9 @@ importers:
       semver:
         specifier: ^7.6.0
         version: 7.6.0
+      simple-git:
+        specifier: ^3.24.0
+        version: 3.24.0
       url-join:
         specifier: ^5.0.0
         version: 5.0.0
@@ -1870,6 +1873,18 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@kwsites/file-exists@1.1.1:
+    resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
+    dependencies:
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@kwsites/promise-deferred@1.1.1:
+    resolution: {integrity: sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==}
+    dev: false
 
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -9011,6 +9026,16 @@ packages:
       '@sigstore/sign': 1.0.0
       '@sigstore/tuf': 1.0.3
       make-fetch-happen: 11.1.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /simple-git@3.24.0:
+    resolution: {integrity: sha512-QqAKee9Twv+3k8IFOFfPB2hnk6as6Y6ACUpwCtQvRYBAes23Wv3SZlHVobAzqcE8gfsisCvPw3HGW3HYM+VYYw==}
+    dependencies:
+      '@kwsites/file-exists': 1.1.1
+      '@kwsites/promise-deferred': 1.1.1
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: false

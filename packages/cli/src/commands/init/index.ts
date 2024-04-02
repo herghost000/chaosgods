@@ -1,11 +1,13 @@
 import process from 'node:process'
 import fs from 'node:fs'
+import path from 'node:path'
 import { confirm, input, select } from '@inquirer/prompts'
 import fse from 'fs-extra'
 import { valid } from 'semver'
 import Command from '@/models/command'
 import log from '@/utils/log'
 import { getProjectTpls } from '@/utils/github'
+import Package from '@/models/package'
 
 const TYPE_PROJECT = 1
 const TYPE_COMPONENT = 2
@@ -24,7 +26,24 @@ export class InitCommand extends Command {
 
   public async exec(): Promise<void> {
     try {
-      await this.prepare()
+      const info = await this.prepare()
+      if (info) {
+        const tpl = this.tpls[info.tpl]
+        const homePath = process.env.CLI_HOME_PATH ?? ''
+        const targetPath = path.resolve(homePath, 'tpls')
+        const pkg = new Package({
+          hosts: tpl.hosts,
+          name: tpl.name,
+          targetPath,
+          branch: tpl.branch,
+          version: tpl.version,
+          account: tpl.account,
+        })
+        if (await pkg.exists())
+          await pkg.update()
+        else
+          await pkg.install()
+      }
     }
     catch (error) {
       log.error('InitCommand exec()', (error as Error).message)
@@ -65,6 +84,7 @@ export class InitCommand extends Command {
       type: TYPE_PROJECT,
       name: '',
       version: '',
+      tpl: 0,
     }
     ret.type = await select({
       message: '请选择创建类型',
@@ -104,10 +124,21 @@ export class InitCommand extends Command {
             return value
         },
       })
+
+      ret.tpl = await select({
+        message: '请选择项目模版',
+        default: 0,
+        choices: this.tpls.map((tpl, index) => {
+          return {
+            name: tpl.name,
+            value: index,
+            description: tpl.desc,
+          }
+        }),
+      })
     }
     else {
-      const a = await getProjectTpls()
-      log.info('a', a)
+      log.info('a', this.tpls)
     }
     return ret
   }

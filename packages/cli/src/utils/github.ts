@@ -2,10 +2,12 @@ import process from 'node:process'
 import axios from 'axios'
 import urlJoin from 'url-join'
 
-const BASE_URL = process.env.CLI_BASE_URL ? process.env.CLI_BASE_URL : 'https://raw.githubusercontent.com/'
+export function getBaseUrl() {
+  return process.env.CLI_BASE_URL ? process.env.CLI_BASE_URL : 'https://raw.githubusercontent.com/'
+}
 
 export function getFileRaw(account: string, repository: string, branch: string, filepath: string) {
-  const apiUrl = urlJoin(BASE_URL, account, repository, branch, filepath)
+  const apiUrl = urlJoin(getBaseUrl(), account, repository, branch, filepath)
   return axios.get(apiUrl).then((res) => {
     if (res.status === 200)
       return res.data
