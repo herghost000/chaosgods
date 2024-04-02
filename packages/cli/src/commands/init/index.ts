@@ -28,6 +28,10 @@ export class InitCommand extends Command {
     }
   }
 
+  public downloadTpl() {
+    return 'https://github.com/youzan/vant-cli-template.git'
+  }
+
   public async prepare() {
     const localPath = process.cwd()
     if (!this.isEmptyDir(localPath)) {
@@ -50,7 +54,12 @@ export class InitCommand extends Command {
   }
 
   public async getProjectInfo() {
-    const answer = await select({
+    const ret = {
+      type: TYPE_PROJECT,
+      name: '',
+      version: '',
+    }
+    ret.type = await select({
       message: '请选择创建类型',
       default: TYPE_PROJECT,
       choices: [
@@ -66,15 +75,15 @@ export class InitCommand extends Command {
         },
       ],
     })
-    if (answer === TYPE_PROJECT) {
-      await input({
+    if (ret.type === TYPE_PROJECT) {
+      ret.name = await input({
         message: '请输入项目名称',
         default: 'project',
         validate(value) {
-          return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(value)
+          return /^[a-zA-Z]+([_-]?[a-zA-Z0-9])*$/.test(value)
         },
       })
-      await input({
+      ret.version = await input({
         message: '请输入项目版本号',
         default: '1.0.0',
         validate(value) {
@@ -89,6 +98,7 @@ export class InitCommand extends Command {
         },
       })
     }
+    return ret
   }
 
   public isEmptyDir(path: string) {
