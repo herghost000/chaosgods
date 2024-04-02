@@ -58,7 +58,7 @@ export default class Package {
   }
 
   private get _urlOfGithub() {
-    return urlJoin(GITHUB_BASE_URL, this.account, this.name, '.git')
+    return urlJoin(GITHUB_BASE_URL, this.account, `${this.name}.git`)
   }
 
   get cacheFilePath() {
@@ -85,11 +85,8 @@ export default class Package {
   }
 
   public async prepare() {
-    if (this.targetPath && !pathExistsSync(this.targetPath))
-      fse.mkdirpSync(this.targetPath)
-
-    if (this.storePath && !pathExistsSync(this.storePath))
-      fse.mkdirpSync(this.storePath)
+    if (this.cacheFilePath && !pathExistsSync(this.cacheFilePath))
+      fse.mkdirpSync(this.cacheFilePath)
 
     if (this.isNpm && this.version === 'latest')
       this.version = await getLatestVersion(this.name)
@@ -130,8 +127,8 @@ export default class Package {
   }
 
   private async _installOfGithub() {
-    const git = simpleGit(this.targetPath)
-    git.clone(this.url, this.targetPath, ['--branch', this.branch], (err) => {
+    const git = simpleGit(this.cacheFilePath)
+    git.clone(this.url, this.cacheFilePath, ['--branch', this.branch], (err) => {
       if (err)
         log.error('Package', '拉取远程仓库失败')
       else
@@ -168,7 +165,7 @@ export default class Package {
   }
 
   private async _updateOfGithub() {
-    const git = simpleGit(this.targetPath)
+    const git = simpleGit(this.cacheFilePath)
     git.checkout(this.branch, (err) => {
       if (err) {
         console.error('切换分支失败:', err)
