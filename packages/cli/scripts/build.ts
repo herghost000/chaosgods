@@ -24,6 +24,8 @@ await esbuild.build({
     // 'url-join',
     // 'locales/*'
     '@inquirer/prompts',
+    'simple-git',
+    // 'ora',
   ],
   outfile: 'outfile.cjs',
   format: 'cjs',
