@@ -130,7 +130,7 @@ export default class Package {
   private async _installOfGithub() {
     const cloneSpinner = ora(`克隆远程仓库 ${this.url}...`).start()
     const git = simpleGit(this.cacheFilePath)
-    git.clone(this.url, this.cacheFilePath, ['--branch', this.branch], (err) => {
+    await git.clone(this.url, this.cacheFilePath, ['--branch', this.branch], (err) => {
       if (err)
         cloneSpinner.stopAndPersist({ symbol: '❌' })
       else
@@ -169,19 +169,19 @@ export default class Package {
   private async _updateOfGithub() {
     const checkoutSpinner = ora(`检出分支${this.branch}...`).start()
     const git = simpleGit(this.cacheFilePath)
-    git.checkout(this.branch, (err) => {
+    await git.checkout(this.branch, async (err) => {
       if (err) {
         checkoutSpinner.stopAndPersist({ symbol: '❌' })
         return
       }
       checkoutSpinner.succeed()
-      const pullSpinner = ora(`更新分支${this.branch}...`).start()
-      git.pull((err, _) => {
-        if (err)
-          pullSpinner.stopAndPersist({ symbol: '❌' })
-        else
-          pullSpinner.succeed()
-      })
+    })
+    const pullSpinner = ora(`更新分支${this.branch}...`).start()
+    await git.pull((err, _) => {
+      if (err)
+        pullSpinner.stopAndPersist({ symbol: '❌' })
+      else
+        pullSpinner.succeed()
     })
   }
 

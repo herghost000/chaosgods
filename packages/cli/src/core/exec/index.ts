@@ -1,7 +1,7 @@
 import process from 'node:process'
 import path from 'node:path'
-import cp from 'node:child_process'
 import type { Command } from 'commander'
+import { spawn } from '@/utils/process'
 import Package from '@/models/package'
 import * as commands from '@/commands'
 import log from '@/utils/log'
@@ -61,11 +61,4 @@ export default async function exec(...args: any[]) {
       process.exit(1)
     })
   }
-}
-
-function spawn(command: string, args: string[], options: cp.SpawnOptions) {
-  const win32 = process.platform === 'win32'
-  const cmd = win32 ? 'cmd' : command
-  const cmdArgs = win32 ? ['/c'].concat(command, args) : args
-  return cp.spawn(cmd, cmdArgs, options)
 }

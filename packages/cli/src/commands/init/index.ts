@@ -4,10 +4,12 @@ import path from 'node:path'
 import { confirm, input, select } from '@inquirer/prompts'
 import fse from 'fs-extra'
 import { valid } from 'semver'
+import ora from 'ora'
 import Command from '@/models/command'
 import log from '@/utils/log'
 import { getProjectTpls } from '@/utils/github'
 import Package from '@/models/package'
+import { spawnAsync } from '@/utils/process'
 
 const TYPE_PROJECT = 1
 const TYPE_COMPONENT = 2
@@ -15,6 +17,8 @@ const TYPE_COMPONENT = 2
 export class InitCommand extends Command {
   public force: boolean = false
   public tpls: Record<string, string>[] = []
+  public tpl: Record<string, string> = {}
+  public pkg!: Package
 
   constructor(args: any[]) {
     super(args)
@@ -27,31 +31,59 @@ export class InitCommand extends Command {
   public async exec(): Promise<void> {
     try {
       const info = await this.prepare()
-      if (info) {
-        const tpl = this.tpls[info.tpl]
-        const homePath = process.env.CLI_HOME_PATH ?? ''
-        const targetPath = path.resolve(homePath, 'tpls')
-        const pkg = new Package({
-          hosts: tpl.hosts,
-          name: tpl.name,
-          targetPath,
-          branch: tpl.branch,
-          version: tpl.version,
-          account: tpl.account,
-        })
-        if (await pkg.exists())
-          await pkg.update()
-        else
-          await pkg.install()
-      }
+      if (!info)
+        return
+
+      await this.downloadTpl()
+      await this.installTpl()
     }
     catch (error) {
       log.error('InitCommand exec()', (error as Error).message)
     }
   }
 
-  public downloadTpl() {
-    return 'https://github.com/youzan/vant-cli-template.git'
+  public async downloadTpl() {
+    const homePath = process.env.CLI_HOME_PATH ?? ''
+    const targetPath = path.resolve(homePath, 'tpls')
+    this.pkg = new Package({
+      hosts: this.tpl.hosts,
+      name: this.tpl.name,
+      targetPath,
+      branch: this.tpl.branch,
+      version: this.tpl.version,
+      account: this.tpl.account,
+    })
+    if (await this.pkg.exists())
+      await this.pkg.update()
+    else
+      await this.pkg.install()
+  }
+
+  public async installTpl() {
+    const cloneSpinner = ora(`安装${this.tpl.name}模版...`).start()
+    try {
+      const targetPath = process.cwd()
+      fse.ensureDirSync(targetPath)
+      fse.ensureDirSync(this.pkg.cacheFilePath)
+      fse.copySync(this.pkg.cacheFilePath, targetPath)
+      cloneSpinner.succeed()
+      if (this.tpl.scripts) {
+        for (let i = 0; i < this.tpl.scripts.length; i++) {
+          const script = this.tpl.scripts[i]
+          const cmdsps = script.split(' ')
+          const cmd = cmdsps[0]
+          const args = cmdsps.slice(1)
+          await spawnAsync(cmd, args, {
+            cwd: process.cwd(),
+            stdio: 'inherit',
+          })
+        }
+      }
+    }
+    catch (error) {
+      cloneSpinner.isSpinning && cloneSpinner.stopAndPersist({ symbol: '❌' })
+      throw error
+    }
   }
 
   public async prepare() {
@@ -76,7 +108,9 @@ export class InitCommand extends Command {
           return
       }
     }
-    return this.getProjectInfo()
+    const info = await this.getProjectInfo()
+    this.tpl = this.tpls[info.tpl]
+    return info
   }
 
   public async getProjectInfo() {

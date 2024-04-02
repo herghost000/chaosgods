@@ -5,6 +5,9 @@
     "name": "ht",
     "version": "",
     "branch": "master",
-    "desc": "ht库模版"
+    "desc": "ht库模版",
+    "scripts": [
+      "npm init -y"
+    ]
   }
 ]
