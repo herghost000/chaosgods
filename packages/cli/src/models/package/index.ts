@@ -188,7 +188,7 @@ export default class Package {
   public getRootPath() {
     switch (this.hosts) {
       case PACKAGE_HOSTS_GITHUB:
-        return this.cacheFilePath
+        return this._getRootPathOfGithub()
       case PACKAGE_HOSTS_NPM:
         return this._getRootPathOfNpm()
       default:
@@ -198,6 +198,15 @@ export default class Package {
 
   private _getRootPathOfNpm() {
     const dir = packageDirectorySync({ cwd: this.storePath ? this.cacheFilePath : this.targetPath })
+    if (dir) {
+      const pkg = require(path.resolve(dir, 'package.json'))
+      return path.resolve(dir, pkg.main)
+    }
+    return ''
+  }
+
+  private _getRootPathOfGithub() {
+    const dir = packageDirectorySync({ cwd: this.cacheFilePath })
     if (dir) {
       const pkg = require(path.resolve(dir, 'package.json'))
       return path.resolve(dir, pkg.main)

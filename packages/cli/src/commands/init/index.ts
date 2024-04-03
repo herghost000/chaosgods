@@ -16,6 +16,8 @@ import { spawnAsync } from '@/utils/process'
 const TAG_PROJECT = 'project'
 const TAG_COMPONENT = 'component'
 const TAG_TEMPLATE = 'template'
+const TEMPLATE_NORMAL = 'normal'
+const TEMPLATE_CUSTOM = 'custom'
 
 export class InitCommand extends Command {
   public force: boolean = false
@@ -67,6 +69,17 @@ export class InitCommand extends Command {
   }
 
   public async installTpl() {
+    switch (this.tpl.type) {
+      case TEMPLATE_NORMAL:
+        return this._installNormalTpl()
+      case TEMPLATE_CUSTOM:
+        return this._installCustomTpl()
+      default:
+        break
+    }
+  }
+
+  private async _installNormalTpl() {
     const cloneSpinner = ora(`安装${this.tpl.name}模版...`).start()
     try {
       const targetPath = process.cwd()
@@ -86,6 +99,33 @@ export class InitCommand extends Command {
     catch (error) {
       cloneSpinner.isSpinning && cloneSpinner.stopAndPersist({ symbol: '❌' })
       throw error
+    }
+  }
+
+  private async _installCustomTpl() {
+    // eslint-disable-next-line no-console
+    console.log()
+    if (this.tpl.scripts) {
+      for (let i = 0; i < this.tpl.scripts.length; i++) {
+        const script = this.tpl.scripts[i]
+        await this.execCommand(script, this.pkg.cacheFilePath)
+      }
+    }
+    const rootPath = this.pkg.getRootPath()
+    if (fse.pathExistsSync(rootPath)) {
+      const code = `
+require("node:process").env.CLI_PKG_INFO = '${JSON.stringify({ cacheFilePath: this.pkg.cacheFilePath })}';
+require("node:process").env.CLI_TPL_INFO = '${JSON.stringify(this.tpl)}';
+require("node:process").env.CLI_PROJECT_INFO = '${JSON.stringify(this.projectInfo)}';
+require("${rootPath}");
+`
+      await spawnAsync('node', ['-e', code], {
+        cwd: process.cwd(),
+        stdio: 'inherit',
+      })
+    }
+    else {
+      throw new Error(`${rootPath} 不存在`)
     }
   }
 
@@ -221,12 +261,12 @@ export class InitCommand extends Command {
     return !fileList.length
   }
 
-  public async execCommand(script: string) {
+  public async execCommand(script: string, cwd?: string) {
     const cmdsps = script.split(' ')
     const cmd = cmdsps[0]
     const args = cmdsps.slice(1)
     await spawnAsync(cmd, args, {
-      cwd: process.cwd(),
+      cwd: cwd || process.cwd(),
       stdio: 'inherit',
     })
   }
