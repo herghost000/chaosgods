@@ -26,6 +26,8 @@ await esbuild.build({
     '@inquirer/prompts',
     'simple-git',
     // 'ora',
+    'glob',
+    'ejs',
   ],
   outfile: 'outfile.cjs',
   format: 'cjs',

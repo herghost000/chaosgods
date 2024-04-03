@@ -5,6 +5,8 @@ import { confirm, input, select } from '@inquirer/prompts'
 import fse from 'fs-extra'
 import { valid } from 'semver'
 import ora from 'ora'
+import { glob } from 'glob'
+import ejs from 'ejs'
 import Command from '@/models/command'
 import log from '@/utils/log'
 import { getProjectTpls } from '@/utils/github'
@@ -19,6 +21,10 @@ export class InitCommand extends Command {
   public tpls: Record<string, string>[] = []
   public tpl: Record<string, string> = {}
   public pkg!: Package
+  public projectInfo: {
+    name?: string
+    version?: string
+  } = {}
 
   constructor(args: any[]) {
     super(args)
@@ -63,20 +69,16 @@ export class InitCommand extends Command {
     const cloneSpinner = ora(`安装${this.tpl.name}模版...`).start()
     try {
       const targetPath = process.cwd()
+      const srcPath = path.resolve(this.pkg.cacheFilePath, 'template')
       fse.ensureDirSync(targetPath)
-      fse.ensureDirSync(this.pkg.cacheFilePath)
-      fse.copySync(this.pkg.cacheFilePath, targetPath)
+      fse.ensureDirSync(srcPath)
+      fse.copySync(srcPath, targetPath)
+      await this.ejsRender()
       cloneSpinner.succeed()
       if (this.tpl.scripts) {
         for (let i = 0; i < this.tpl.scripts.length; i++) {
           const script = this.tpl.scripts[i]
-          const cmdsps = script.split(' ')
-          const cmd = cmdsps[0]
-          const args = cmdsps.slice(1)
-          await spawnAsync(cmd, args, {
-            cwd: process.cwd(),
-            stdio: 'inherit',
-          })
+          await this.execCommand(script)
         }
       }
     }
@@ -84,6 +86,27 @@ export class InitCommand extends Command {
       cloneSpinner.isSpinning && cloneSpinner.stopAndPersist({ symbol: '❌' })
       throw error
     }
+  }
+
+  public async ejsRender() {
+    const dir = process.cwd()
+    const files = await glob('**', {
+      cwd: dir,
+      nodir: true,
+      ignore: ['**/node_modules/**'],
+    })
+    return Promise.all(files.map(async (file) => {
+      const filePath = path.resolve(dir, file)
+      return new Promise((resolve, reject) => {
+        ejs.renderFile(filePath, this.projectInfo, {}, async (error, content) => {
+          if (error)
+            return reject(error)
+
+          fse.writeFileSync(filePath, content, 'utf-8')
+          resolve(content)
+        })
+      })
+    }))
   }
 
   public async prepare() {
@@ -109,6 +132,7 @@ export class InitCommand extends Command {
       }
     }
     const info = await this.getProjectInfo()
+    this.projectInfo = info
     this.tpl = this.tpls[info.tpl]
     return info
   }
@@ -180,6 +204,16 @@ export class InitCommand extends Command {
   public isEmptyDir(path: string) {
     const fileList = fs.readdirSync(path)
     return !fileList.length
+  }
+
+  public async execCommand(script: string) {
+    const cmdsps = script.split(' ')
+    const cmd = cmdsps[0]
+    const args = cmdsps.slice(1)
+    await spawnAsync(cmd, args, {
+      cwd: process.cwd(),
+      stdio: 'inherit',
+    })
   }
 }
 
