@@ -9,7 +9,6 @@
     "description": "官方自定义模版",
     "ignores": [],
     "scripts": [
-      "npm install -g pnpm",
       "pnpm install"
     ],
     "tags": ["template"]
@@ -24,7 +23,6 @@
     "description": "官方快速创建vue3项目模版",
     "ignores": [],
     "scripts": [
-      "npm install -g pnpm",
       "pnpm install",
       "pnpm run format",
       "pnpm run dev"
@@ -41,7 +39,6 @@
     "description": "官方快速创建组件库模版",
     "ignores": [],
     "scripts": [
-      "npm install -g pnpm",
       "pnpm init"
     ],
     "tags": ["component"]
