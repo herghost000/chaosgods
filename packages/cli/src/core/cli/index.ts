@@ -6,6 +6,7 @@ import { pathExistsSync } from 'fs-extra'
 import rootCheck from 'root-check'
 import dotenv from 'dotenv'
 import { Command } from 'commander'
+import gradientString from 'gradient-string'
 import { DEFAULT_CLI_HOME } from './const'
 import pkg from '@/../package.json'
 import { getSemverVersion } from '@/utils/npm'
@@ -19,7 +20,7 @@ export default async function core() {
 
 async function prepare() {
   try {
-    checkPkgVersion()
+    checkBanner()
     checkRoot()
     checkUserHome()
     checkEnv()
@@ -30,8 +31,17 @@ async function prepare() {
   }
 }
 
-function checkPkgVersion() {
-  log.info('版本', pkg.version)
+function checkBanner() {
+  // eslint-disable-next-line no-console
+  console.log()
+  // eslint-disable-next-line no-console
+  console.log(gradientString([
+    { color: '#42d392', pos: 0 },
+    { color: '#42d392', pos: 0.1 },
+    { color: '#647eff', pos: 1 },
+  ])(`CHAOSGODS - 前端管理工具 ${pkg.version}`))
+  // eslint-disable-next-line no-console
+  console.log()
 }
 
 function checkRoot() {

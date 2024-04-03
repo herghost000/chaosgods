@@ -30,6 +30,7 @@
     "ejs": "^3.1.9",
     "fs-extra": "^11.2.0",
     "glob": "^10.3.12",
+    "gradient-string": "^2.0.2",
     "import-local": "^3.1.0",
     "node-homedir": "^2.0.0",
     "npminstall": "^7.12.0",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@types/ejs": "^3.1.5",
+    "@types/gradient-string": "^1.1.5",
     "@types/import-local": "^3.1.2",
     "@types/minimist": "^1.2.5",
     "@types/npmlog": "^7.0.0",

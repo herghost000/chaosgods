@@ -28,6 +28,7 @@ await esbuild.build({
     // 'ora',
     'glob',
     'ejs',
+    'gradient-string',
   ],
   outfile: 'outfile.cjs',
   format: 'cjs',
