@@ -12,8 +12,8 @@ export function getPackageInfo(pkgName: string, registry?: string) {
       return res.data
 
     return null
-  }).catch((err) => {
-    return Promise.reject(err)
+  }).catch(() => {
+    return Promise.reject(new Error(`未在${registry}查找到${pkgName}`))
   })
 }
 

@@ -163,7 +163,7 @@ export class InitCommand extends Command {
     if (ret.type === TYPE_PROJECT) {
       ret.name = await input({
         message: '请输入项目名称',
-        default: 'project',
+        default: this.projectName || 'project',
         validate(value) {
           return /^[a-zA-Z]+([_-]?[a-zA-Z0-9])*$/.test(value)
         },
@@ -190,7 +190,7 @@ export class InitCommand extends Command {
           return {
             name: tpl.name,
             value: index,
-            description: tpl.desc,
+            description: tpl.description,
           }
         }),
       })

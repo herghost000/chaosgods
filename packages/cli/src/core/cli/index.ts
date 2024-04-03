@@ -7,6 +7,7 @@ import rootCheck from 'root-check'
 import dotenv from 'dotenv'
 import { Command } from 'commander'
 import gradientString from 'gradient-string'
+import ora from 'ora'
 import { DEFAULT_CLI_HOME } from './const'
 import pkg from '@/../package.json'
 import { getSemverVersion } from '@/utils/npm'
@@ -27,7 +28,7 @@ async function prepare() {
     await checkVersionUpdate()
   }
   catch (error) {
-    log.error('core error', (error as Error).message)
+    log.error('prepare', (error as Error).message)
   }
 }
 
@@ -74,11 +75,23 @@ function createDefaultConfig() {
 }
 
 async function checkVersionUpdate() {
+  const spinner = ora(`检查版本...`).start()
   const pkgVer = pkg.version
   const pkgName = pkg.name
-  const version = await getSemverVersion(pkgVer, pkgName)
-  if (version)
-    log.warn('版本', colors.yellow(`发现新的版本 npm install -g ${pkgName} 更新至：${version}`))
+  try {
+    const version = await getSemverVersion(pkgVer, pkgName)
+    if (version) {
+      log.warn('版本', colors.yellow(`发现新的版本 npm install -g ${pkgName} 更新至：${version}`))
+      spinner.stopAndPersist({ symbol: '🟡' })
+    }
+    else { spinner.succeed() }
+  }
+  catch (error) {
+    spinner.stopAndPersist({ symbol: '❌' })
+    // eslint-disable-next-line no-console
+    console.log()
+    throw error
+  }
 }
 
 function registerCommands() {

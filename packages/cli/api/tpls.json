@@ -1,26 +1,49 @@
 [
   {
+    "type": "normal",
+    "hosts": "github",
+    "account": "herghost000",
+    "name": "chaosgods-tpl-custom",
+    "version": "",
+    "branch": "main",
+    "description": "官方自定义模版",
+    "ignores": [],
+    "scripts": [
+      "npm install -g pnpm",
+      "pnpm install"
+    ],
+    "tags": ["template"]
+  },
+  {
+    "type": "normal",
     "hosts": "github",
     "account": "herghost000",
     "name": "chaosgods-tpl-vue3",
     "version": "",
     "branch": "main",
-    "desc": "vue3模版",
+    "description": "官方快速创建vue3项目模版",
+    "ignores": [],
     "scripts": [
-      "npm install",
-      "npm run format",
-      "npm run dev"
-    ]
+      "npm install -g pnpm",
+      "pnpm install",
+      "pnpm run format",
+      "pnpm run dev"
+    ],
+    "tags": ["project"]
   },
   {
+    "type": "normal",
     "hosts": "github",
     "account": "herghost000",
     "name": "ht",
     "version": "",
     "branch": "master",
-    "desc": "ht库模版",
+    "description": "官方快速创建组件库模版",
+    "ignores": [],
     "scripts": [
-      "npm init -y"
-    ]
+      "npm install -g pnpm",
+      "pnpm init"
+    ],
+    "tags": ["component"]
   }
 ]
