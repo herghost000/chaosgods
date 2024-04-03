@@ -30,6 +30,21 @@
     "tags": ["project"]
   },
   {
+    "type": "custom",
+    "hosts": "github",
+    "account": "herghost000",
+    "name": "chaosgods-tpl-test",
+    "version": "",
+    "branch": "main",
+    "description": "测试自定义方式创建模版",
+    "ignores": [],
+    "scripts": [
+      "pnpm install",
+      "pnpm run build"
+    ],
+    "tags": ["project"]
+  },
+  {
     "type": "normal",
     "hosts": "github",
     "account": "herghost000",

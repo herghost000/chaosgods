@@ -217,7 +217,7 @@ export class InitCommand extends Command {
   }
 
   public isEmptyDir(path: string) {
-    const fileList = fs.readdirSync(path)
+    const fileList = fs.readdirSync(path).filter(name => name !== '.git')
     return !fileList.length
   }
 
