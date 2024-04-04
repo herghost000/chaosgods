@@ -109,6 +109,11 @@ function registerCommands() {
     .option('-f, --force', '是否强制初始化', false)
     .action(exec)
 
+  program
+    .command('add [templateName]')
+    .option('-f, --force', '是否强制添加模版', false)
+    .action(exec)
+
   program.on('option:debug', () => {
     process.env.CLI_LOG_LEVEL = log.level = 'verbose'
   })
