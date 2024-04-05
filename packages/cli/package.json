@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "",
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0-only",
   "keywords": [],
   "sideEffects": false,
   "main": "outfile.cjs",
