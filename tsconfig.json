@@ -10,10 +10,7 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "paths": {
-      "@chaosgods/utils": ["packages/utils/src"],
-      "@chaosgods/icons": ["packages/icons/src"],
-      "@chaosgods/ui": ["packages/ui/src"],
-      "@chaosgods/cli": ["packages/cli/src"]
+      "@chaosgods/*": ["packages/*/src"]
     },
     "resolveJsonModule": true,
     "types": ["vitest/globals"],
@@ -24,7 +21,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "declaration": true,
     "noEmit": true,
+    "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true
   },

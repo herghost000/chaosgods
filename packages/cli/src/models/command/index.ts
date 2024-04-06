@@ -35,7 +35,7 @@ export default abstract class Command {
   public initArgs() {
     this.command = this._args.pop()
     this.options = this._args.pop()
-    this.projectName = this._args.pop()
+    this.projectName = this._args[0]
   }
 
   public abstract init(): void

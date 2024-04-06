@@ -3,8 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@/typings/*": ["./typings/*"],
       "@/*": ["./src/*"]
     }
   },
-  "include": ["index.ts", "typings/**/*.d.ts", "src/lib/**/*", "src/utils/**/*", "src/core/cli/const.ts", "src/core/cli/index.ts"]
+  "include": ["typings/**/*.d.ts", "index.ts", "src/lib/**/*", "src/utils/**/*", "src/core/cli/const.ts", "src/core/cli/index.ts"]
 }
