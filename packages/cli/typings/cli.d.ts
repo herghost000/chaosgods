@@ -30,3 +30,21 @@ export interface GithubOrg {
 export interface GitOrg {
   login: string
 }
+
+export interface GitRepository {
+  name: string
+  full_name: string
+  html_url: string
+}
+
+export interface GiteeRepository {
+  name: string
+  full_name: string
+  html_url: string
+}
+
+export interface GithubRepository {
+  name: string
+  full_name: string
+  html_url: string
+}

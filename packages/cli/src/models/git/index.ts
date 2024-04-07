@@ -5,10 +5,12 @@ import simpleGit from 'simple-git'
 import { homedir } from 'node-homedir'
 import fse from 'fs-extra'
 import { password, select } from '@inquirer/prompts'
-import Github from './Github'
-import Gitee from './Gitee'
+import ora from 'ora'
+import terminalLink from 'terminal-link'
+import GithubServer from './Github'
+import GiteeServer from './Gitee'
 import type GitServer from './GitServer'
-import type { GitOptions, GitOrg, GitUser } from '@/typings/cli'
+import type { GitOptions, GitOrg, GitRepository, GitUser } from '@/typings/cli'
 import { DEFAULT_CLI_HOME } from '@/core/cli/const'
 import { readFile, writeFile } from '@/utils/fs'
 import log from '@/utils/log'
@@ -50,6 +52,8 @@ export default class Git {
   public owner: string = ''
   /** 远程仓库登录名 */
   public login: string = ''
+  /** 远程仓库信息 */
+  public repository: GitRepository | null = null
 
   constructor(options: GitOptions) {
     Object.assign(this, options)
@@ -66,6 +70,7 @@ export default class Git {
     await this.checkGitToken()
     await this.getUserAndOrgs()
     await this.checkGitOwner()
+    await this.checkRepository()
   }
 
   public checkHomePath() {
@@ -103,9 +108,9 @@ export default class Git {
   public createGitServer(gitServer: string): GitServer | null {
     switch (gitServer.trim()) {
       case GIT_PLATFORM_GITHUB:
-        return new Github()
+        return new GithubServer()
       case GIT_PLATFORM_GITEE:
-        return new Gitee()
+        return new GiteeServer()
       default:
         return null
     }
@@ -133,8 +138,6 @@ export default class Git {
     this.orgs = await this.gitServer?.getOrgs(this.user.login) ?? null
     if (!this.orgs)
       throw new Error('未获取到组织信息')
-
-    log.success('', '用户与组织信息获取成功')
   }
 
   public async checkGitOwner() {
@@ -182,8 +185,30 @@ export default class Git {
       writeFile(gitOwnerPath, gitOwner)
       writeFile(gitLoginPath, gitLogin)
     }
+    log.success('类型', gitOwner)
+    log.success('用户', gitLogin)
     this.owner = gitOwner
     this.login = gitLogin
+  }
+
+  public async checkRepository() {
+    let repository = await this.gitServer?.getRepository(this.login, this.name)
+    if (!repository) {
+      const createSpinner = ora(`创建远程仓库...`).start()
+      if (this.owner === GIT_REPOSITORY_USER)
+        repository = await this.gitServer?.createRepository(this.name)
+      else
+        repository = await this.gitServer?.createOrgRepository(this.name, this.login)
+
+      createSpinner.succeed()
+    }
+
+    const link = terminalLink(repository?.html_url ?? '', repository?.html_url ?? '', {
+      fallback(_, url) {
+        return url
+      },
+    })
+    log.success('仓库地址', link)
   }
 
   public createPath(file: string) {

@@ -29,7 +29,15 @@ export default class GiteeRequest {
         ...params,
         access_token: this.token,
       },
-      method: 'GET',
+      headers,
+    })
+  }
+
+  public post<T = any>(url: string, data: any = {}, headers = {}) {
+    return this.service.post<T>(url, data, {
+      params: {
+        access_token: this.token,
+      },
       headers,
     })
   }

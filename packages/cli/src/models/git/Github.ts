@@ -1,8 +1,8 @@
 import GitServer from './GitServer'
 import GithubRequest from './GithubRequest'
-import type { GitOrg, GitUser, GithubOrg, GithubUser } from '@/typings/cli'
+import type { GitOrg, GitRepository, GitUser, GithubOrg, GithubRepository, GithubUser } from '@/typings/cli'
 
-export default class Github extends GitServer {
+export default class GithubServer extends GitServer {
   public request: GithubRequest | null = null
   constructor() {
     super('github', '')
@@ -13,12 +13,18 @@ export default class Github extends GitServer {
     this.request = new GithubRequest(token)
   }
 
-  public createRepository(): void {
-    throw new Error('Method not implemented.')
+  public createRepository(name: string) {
+    return this.request?.post<GithubRepository>(`/user/repos`, { name }).then<GitRepository | null>((res) => {
+      return this.handleResponse(res)
+    }) ?? null
   }
 
-  public createOrgRepository(): void {
-    throw new Error('Method not implemented.')
+  public createOrgRepository(name: string, login: string) {
+    return this.request?.post<GithubRepository>(`/orgs/${login}/repos`, { name }, {
+      Accept: 'application/vnd.github.v3+json',
+    }).then<GitRepository | null>((res) => {
+      return this.handleResponse(res)
+    }) ?? null
   }
 
   public getRemote(): void {
@@ -26,11 +32,8 @@ export default class Github extends GitServer {
   }
 
   public getUser() {
-    return this.request?.get<GithubUser>('/user').then<GitUser>((res) => {
-      const { login } = res.data
-      return {
-        login,
-      }
+    return this.request?.get<GithubUser>('/user').then<GitUser | null>((res) => {
+      return this.handleResponse(res)
     }) ?? null
   }
 
@@ -40,6 +43,12 @@ export default class Github extends GitServer {
       per_page: 100,
     }).then<GitOrg[]>((res) => {
       return res.data
+    }) ?? null
+  }
+
+  public getRepository(login: string, name: string) {
+    return this.request?.get<GithubRepository>(`/repos/${login}/${name}`).then<GitRepository | null>((res) => {
+      return this.handleResponse(res)
     }) ?? null
   }
 }

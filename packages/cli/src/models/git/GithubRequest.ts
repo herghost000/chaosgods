@@ -35,4 +35,10 @@ export default class GithubRequest {
       headers,
     })
   }
+
+  public post<T = any>(url: string, data: any = {}, headers = {}) {
+    return this.service.post<T>(url, data, {
+      headers,
+    })
+  }
 }
