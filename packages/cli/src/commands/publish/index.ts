@@ -29,12 +29,15 @@ export class PublishCommand extends Command {
   public async exec() {
     const startTime = new Date().getTime()
     await this.prepare()
-    await new Git({
+    const git = await new Git({
       ...this.gitOptions,
       refreshServer: this.refreshServer,
       refreshToken: this.refreshToken,
       refreshOwner: this.refreshOwner,
-    }).prepare()
+    })
+    await git.prepare()
+    await git.init()
+    await git.commit()
     const endTime = new Date().getTime()
     log.info('发布耗时', `${(endTime - startTime) / 1000}s`)
   }

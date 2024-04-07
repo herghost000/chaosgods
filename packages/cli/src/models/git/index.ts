@@ -7,6 +7,7 @@ import fse from 'fs-extra'
 import { confirm, input, password, select } from '@inquirer/prompts'
 import ora from 'ora'
 import terminalLink from 'terminal-link'
+import { gt, gte, inc, valid } from 'semver'
 import GithubServer from './Github'
 import GiteeServer from './Gitee'
 import type GitServer from './GitServer'
@@ -25,6 +26,8 @@ const GIT_PLATFORM_GITHUB = 'github'
 const GIT_PLATFORM_GITEE = 'gitee'
 const GIT_REPOSITORY_USER = 'user'
 const GIT_REPOSITORY_ORG = 'org'
+const VERSION_RELEASE = 'release'
+const VERSION_DEVELOP = 'develop'
 
 export default class Git {
   /** 项目名称 */
@@ -56,6 +59,7 @@ export default class Git {
   /** 远程仓库信息 */
   public repository: GitRepository | null = null
   public remote: string = ''
+  public branch: string = ''
 
   constructor(options: GitOptions) {
     Object.assign(this, options)
@@ -70,15 +74,123 @@ export default class Git {
     await this.checkGitOwner()
     await this.checkRepository()
     this.checkGitignore()
-    await this.init()
   }
 
   public async init() {
-    if (!this.isInitGit())
+    if (this.isInitGit())
       return
 
     await this.initAndAddRemote()
     await this.initCommit()
+  }
+
+  public async commit() {
+    await this.getCorrectVersion()
+    await this.checkStash()
+    await this.checkConflicted()
+    await this.checkoutBranch(this.branch)
+    await this.pullRemoteMainAndDevelop()
+    await this.pushRemote(this.branch)
+  }
+
+  /**
+   * @zh 检查stash区是否存在未恢复的代码，如果存在则恢复
+   * @en Check if there are any unstaged changes in the stash area, and restore them if found.
+   *
+   * @memberof Git
+   */
+  public async checkStash() {
+    const stashList = await this.git.stashList()
+    if (stashList.all.length) {
+      const stashSpinner = ora('恢复stash区...').start()
+      await this.git.stash(['pop'])
+      stashSpinner.succeed()
+    }
+  }
+
+  /**
+   * @zh 根据远程和本地版本生成正确的分支版本。
+   * @en Generate the correct version for the branch based on remote and local versions.
+   *
+   * @memberof Git
+   */
+  public async getCorrectVersion() {
+    const remoteVersions = await this.getRemoteVersions(VERSION_RELEASE)
+    let releaseVersion: string = ''
+    if (remoteVersions && remoteVersions.length)
+      releaseVersion = remoteVersions[0]
+
+    ora().succeed(`远程最新版本... ${releaseVersion ? (`${VERSION_RELEASE}/${releaseVersion}`) : 'N/A'}`)
+
+    const devVersion = this.version
+    if (!releaseVersion) {
+      this.branch = `${VERSION_DEVELOP}/${devVersion}`
+    }
+    else if (gte(this.version, releaseVersion)) {
+      log.info('本地版本大于线上最新版本', `${devVersion} >= ${releaseVersion}`)
+      this.branch = `${VERSION_DEVELOP}/${devVersion}`
+    }
+    else {
+      log.info('本地版本小于线上最新版本', `${devVersion} < ${releaseVersion}`)
+      const standardize = await select({
+        message: '请选择版本升级规范',
+        default: 'patch',
+        choices: [
+          {
+            name: `补丁版本 (${releaseVersion} -> ${inc(releaseVersion, 'patch')})`,
+            value: 'patch',
+          },
+          {
+            name: `次要版本 (${releaseVersion} -> ${inc(releaseVersion, 'minor')})`,
+            value: 'patch',
+          },
+          {
+            name: `主要版本 (${releaseVersion} -> ${inc(releaseVersion, 'major')})`,
+            value: 'major',
+          },
+        ],
+      })
+      const newVersion = inc(releaseVersion, standardize as any) ?? ''
+      this.branch = `${VERSION_DEVELOP}/${newVersion}`
+      this.version = newVersion
+    }
+
+    this.syncVersion()
+  }
+
+  public async syncVersion() {
+    const pkg = fse.readJsonSync(path.resolve(this.dir, 'package.json'))
+    if (pkg && pkg.version !== this.version) {
+      pkg.version = this.version
+      fse.writeJsonSync(path.resolve(this.dir, 'package.json'), pkg, { spaces: 2 })
+    }
+  }
+
+  public async getRemoteVersions(type: string) {
+    const checkSpinner = ora(`检查远程版本... ${type}`).start()
+    if (type === VERSION_RELEASE) {
+      const tags = await this.git.tags()
+      checkSpinner.succeed(`检查远程版本... ${type}: ${tags.all.length}`)
+      const reg = /release\/(\d+\.\d+\.\d+-?\S*?\.?\d*)/im
+      return tags.all.map((tag) => {
+        const match = reg.exec(tag)
+        if (match && valid(match[1]))
+          return match[1]
+        return null
+      }).filter(Boolean).sort((a, b) => gt(b as string, a as string) ? 1 : -1) as string[]
+    }
+    else {
+      const reg = /develop\/(\d+\.\d+\.\d+-?\S*?\.?\d*)/im
+      const branchs = await this.git.branch(['-r'])
+      const versions = branchs.all.map((branch) => {
+        const match = reg.exec(branch)
+        if (match && valid(match[1]))
+          return match[1]
+        return null
+      }).filter(Boolean).sort((a, b) => gt(b as string, a as string) ? 1 : -1) as string[]
+      checkSpinner.succeed(`检查远程版本... ${type}: ${versions.length}`)
+      return versions
+    }
   }
 
   public isInitGit() {
@@ -112,31 +224,60 @@ export default class Git {
     }
 
     else {
-      await this.git.checkout(['-B', 'main'])
+      await this.checkoutBranch('main')
       await this.pushRemote('main')
     }
   }
 
   public async pushRemote(name: string) {
-    const pushSpinner = ora(`推送代码到分支...`).start()
+    const pushSpinner = ora(`推送代码到远程...`).start()
     await this.git.push(['-u', 'origin', name])
-    pushSpinner.succeed(`推送代码到分支... ${name}`)
+    pushSpinner.succeed(`推送代码到远程... ${name}`)
   }
 
   public async pullRemote(name: string, options: any = {}) {
-    const pullSpinner = ora(`拉取远程代码...`).start()
+    const pullSpinner = ora(`拉取远程代码... ${name}`).start()
     await this.git.pull('origin', name, options)
     pullSpinner.succeed(`拉取远程代码... ${name}`)
   }
 
-  public async checkConflicted() {
+  /**
+   * 检查冲突文件，如果有冲突文件则抛出错误。
+   *
+   * @return {Promise<void>}
+   */
+  public async checkConflicted(): Promise<void> {
     const checkSpinner = ora(`检查冲突文件...`).start()
     const status = await this.git.status()
     if (status.conflicted.length) {
       checkSpinner.stopAndPersist({ symbol: '❌' })
       throw new Error(`冲突文件列表:\n${status.conflicted.join('\n')}`)
     }
+    checkSpinner.succeed(`检查冲突文件... N/A`)
+  }
+
+  public async checkoutBranch(branch: string) {
+    const checkSpinner = ora(`切换分支... ${branch}`).start()
+    const localBranchs = await this.git.branchLocal()
+    if (localBranchs.all.includes(branch))
+      await this.git.checkout(branch)
+    else
+      await this.git.checkoutLocalBranch(branch)
     checkSpinner.succeed()
+  }
+
+  public async pullRemoteMainAndDevelop() {
+    const pullSpinner = ora(`合并分支 [main] -> [${this.branch}]...`).start()
+    await this.pullRemote('main')
+    pullSpinner.succeed()
+    await this.checkConflicted()
+    const devVersions = await this.getRemoteVersions(VERSION_DEVELOP)
+    if (devVersions.includes(this.version)) {
+      const pullSpinner = ora(`合并分支 [${this.branch}] -> [${this.branch}]...`).start()
+      await this.pullRemote(this.branch)
+      pullSpinner.succeed()
+      await this.checkConflicted()
+    }
   }
 
   public async checkUnCommitted() {
