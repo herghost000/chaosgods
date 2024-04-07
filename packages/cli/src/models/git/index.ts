@@ -4,7 +4,7 @@ import type { SimpleGit } from 'simple-git'
 import simpleGit from 'simple-git'
 import { homedir } from 'node-homedir'
 import fse from 'fs-extra'
-import { password, select } from '@inquirer/prompts'
+import { confirm, input, password, select } from '@inquirer/prompts'
 import ora from 'ora'
 import terminalLink from 'terminal-link'
 import GithubServer from './Github'
@@ -75,7 +75,10 @@ export default class Git {
 
   public async init() {
     if (!this.isInitGit())
-      await this.initAndAddRemote()
+      return
+
+    await this.initAndAddRemote()
+    await this.initCommit()
   }
 
   public isInitGit() {
@@ -97,6 +100,82 @@ export default class Git {
       await this.git.addRemote('origin', this.remote)
       addRemoteSpinner.succeed()
     }
+  }
+
+  public async initCommit() {
+    await this.checkConflicted()
+    await this.checkUnCommitted()
+    if (await this.checkRemoteMain()) {
+      await this.pullRemote('main', {
+        '--allow-unrelated-histories': true,
+      })
+    }
+
+    else {
+      await this.git.checkout(['-B', 'main'])
+      await this.pushRemote('main')
+    }
+  }
+
+  public async pushRemote(name: string) {
+    const pushSpinner = ora(`推送代码到分支...`).start()
+    await this.git.push(['-u', 'origin', name])
+    pushSpinner.succeed(`推送代码到分支... ${name}`)
+  }
+
+  public async pullRemote(name: string, options: any = {}) {
+    const pullSpinner = ora(`拉取远程代码...`).start()
+    await this.git.pull('origin', name, options)
+    pullSpinner.succeed(`拉取远程代码... ${name}`)
+  }
+
+  public async checkConflicted() {
+    const checkSpinner = ora(`检查冲突文件...`).start()
+    const status = await this.git.status()
+    if (status.conflicted.length) {
+      checkSpinner.stopAndPersist({ symbol: '❌' })
+      throw new Error(`冲突文件列表:\n${status.conflicted.join('\n')}`)
+    }
+    checkSpinner.succeed()
+  }
+
+  public async checkUnCommitted() {
+    const checkSpinner = ora(`检查未提交文件...`).start()
+    const status = await this.git.status()
+    if (status.not_added.length || status.created.length || status.deleted.length || status.modified.length || status.renamed.length) {
+      await this.git.add(status.not_added)
+      await this.git.add(status.created)
+      await this.git.add(status.deleted)
+      await this.git.add(status.modified)
+      await this.git.add(status.renamed.map(renamed => renamed.to))
+    }
+    checkSpinner.succeed()
+    if (!status.staged.length)
+      return
+
+    const isCommit = await confirm({
+      message: '是否提交本地修改文件？',
+      default: false,
+    })
+
+    if (!isCommit)
+      return
+
+    const message = await input({
+      message: '请输入提交说明',
+      default: '',
+    })
+
+    const commitSpinner = ora(`提交文件...`).start()
+    await this.git.commit(message)
+    commitSpinner.succeed()
+  }
+
+  public async checkRemoteMain() {
+    const checkSpinner = ora(`检查远程仓库...`).start()
+    const branch = await this.git.branch(['-r'])
+    checkSpinner.succeed()
+    return branch.all.includes('origin/main') || branch.all.includes('origin/master')
   }
 
   public checkHomePath() {
