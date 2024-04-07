@@ -17,7 +17,7 @@ export default abstract class GitServer {
 
   public abstract createOrgRepository(name: string, login: string): Promise<GitRepository | null> | null
 
-  public abstract getRemote(): void
+  public abstract getRemote(login: string, name: string): string
 
   public abstract getUser(): Promise<GitUser | null> | null
 

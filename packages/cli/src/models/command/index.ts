@@ -1,6 +1,6 @@
 import process from 'node:process'
 import { lt } from 'semver'
-import colors from 'colors/safe'
+import chalk from 'chalk'
 import type { Command as CommanderCommand, OptionValues } from 'commander'
 import log from '@/utils/log'
 import { MIN_NODE_VERSION } from '@/core/cli/const'
@@ -29,7 +29,7 @@ export default abstract class Command {
 
   public checkNodeVersion() {
     if (lt(process.version, MIN_NODE_VERSION))
-      throw new Error(colors.red(`Node最低版本号为 ${MIN_NODE_VERSION}`))
+      throw new Error(chalk.red(`Node最低版本号为 ${MIN_NODE_VERSION}`))
   }
 
   public initArgs() {

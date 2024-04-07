@@ -27,8 +27,8 @@ export default class GithubServer extends GitServer {
     }) ?? null
   }
 
-  public getRemote(): void {
-    throw new Error('Method not implemented.')
+  public getRemote(login: string, name: string): string {
+    return `git@github.com:${login}/${name}.git`
   }
 
   public getUser() {

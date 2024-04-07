@@ -20,6 +20,7 @@ const GIT_SERVER_FILE = '.git_server'
 const GIT_TOKEN_FILE = '.git_token'
 const GIT_OWNER_FILE = '.git_owner'
 const GIT_LOGIN_FILE = '.git_login'
+const GIT_IGNORE_FILE = '.gitignore'
 const GIT_PLATFORM_GITHUB = 'github'
 const GIT_PLATFORM_GITEE = 'gitee'
 const GIT_REPOSITORY_USER = 'user'
@@ -49,19 +50,16 @@ export default class Git {
   /** 用户所属组织列表 */
   public orgs: GitOrg[] | null = null
   /** 远程仓库类型 */
-  public owner: string = ''
+  public type: string = ''
   /** 远程仓库登录名 */
   public login: string = ''
   /** 远程仓库信息 */
   public repository: GitRepository | null = null
+  public remote: string = ''
 
   constructor(options: GitOptions) {
     Object.assign(this, options)
     this.git = simpleGit(this.dir)
-  }
-
-  public async init() {
-    await this.prepare()
   }
 
   public async prepare() {
@@ -71,6 +69,34 @@ export default class Git {
     await this.getUserAndOrgs()
     await this.checkGitOwner()
     await this.checkRepository()
+    this.checkGitignore()
+    await this.init()
+  }
+
+  public async init() {
+    if (!this.isInitGit())
+      await this.initAndAddRemote()
+  }
+
+  public isInitGit() {
+    const gitPath = path.resolve(this.dir, GIT_ROOT_DIR)
+    this.remote = this.gitServer?.getRemote(this.login, this.name) ?? ''
+    if (fse.pathExistsSync(gitPath))
+      return true
+    return false
+  }
+
+  public async initAndAddRemote() {
+    this.remote = this.gitServer?.getRemote(this.login, this.name) ?? ''
+    const initSpinner = ora(`初始化本地仓库...`).start()
+    await this.git.init()
+    initSpinner.succeed()
+    const remotes = await this.git.getRemotes()
+    if (!remotes.find(remote => remote.name === 'origin')) {
+      const addRemoteSpinner = ora(`添加远程仓库...`).start()
+      await this.git.addRemote('origin', this.remote)
+      addRemoteSpinner.succeed()
+    }
   }
 
   public checkHomePath() {
@@ -99,7 +125,7 @@ export default class Git {
       })
       writeFile(gitServerPath, gitServer)
     }
-    log.info('Git服务', gitServer)
+    ora().succeed(`获取Git服务... ${gitServer}`)
     this.gitServer = this.createGitServer(gitServer)
     if (!this.gitServer)
       throw new Error('不支持的git服务')
@@ -131,22 +157,31 @@ export default class Git {
   }
 
   public async getUserAndOrgs() {
+    const userSpinner = ora(`获取用户信息...`).start()
     this.user = await this.gitServer?.getUser() ?? null
-    if (!this.user?.login)
+    if (!this.user?.login) {
+      userSpinner.stopAndPersist({ symbol: '❌' })
       throw new Error('未获取到用户信息')
+    }
 
+    userSpinner.succeed(`获取用户信息... ${this.user.login}`)
+
+    const orgsSpinner = ora(`获取组织信息...`).start()
     this.orgs = await this.gitServer?.getOrgs(this.user.login) ?? null
-    if (!this.orgs)
+    if (!this.orgs) {
+      orgsSpinner.stopAndPersist({ symbol: '❌' })
       throw new Error('未获取到组织信息')
+    }
+    orgsSpinner.succeed(`获取组织信息... ${this.orgs.map(org => org.login).join(',') || 'N/A'}`)
   }
 
   public async checkGitOwner() {
     const gitOwnerPath = this.createPath(GIT_OWNER_FILE)
     const gitLoginPath = this.createPath(GIT_LOGIN_FILE)
-    let gitOwner = readFile(gitOwnerPath) ?? ''
+    let gitType = readFile(gitOwnerPath) ?? ''
     let gitLogin = readFile(gitLoginPath) ?? ''
-    if (!gitOwner || !gitLogin || this.refreshOwner) {
-      gitOwner = await select({
+    if (!gitType || !gitLogin || this.refreshOwner) {
+      gitType = await select({
         message: '请选择远程仓库类型',
         default: GIT_REPOSITORY_USER,
         choices: (this.orgs && this.orgs.length > 0)
@@ -167,10 +202,10 @@ export default class Git {
               },
             ],
       })
-      if (gitOwner === GIT_REPOSITORY_USER) {
+      if (gitType === GIT_REPOSITORY_USER) {
         gitLogin = this.user?.login ?? ''
       }
-      else if (gitOwner === GIT_REPOSITORY_ORG) {
+      else if (gitType === GIT_REPOSITORY_ORG) {
         gitLogin = await select({
           message: '请选择组织',
           default: '',
@@ -182,12 +217,12 @@ export default class Git {
           }) ?? [],
         })
       }
-      writeFile(gitOwnerPath, gitOwner)
+      writeFile(gitOwnerPath, gitType)
       writeFile(gitLoginPath, gitLogin)
     }
-    log.success('类型', gitOwner)
-    log.success('用户', gitLogin)
-    this.owner = gitOwner
+    ora().succeed(`获取仓库类型... ${gitType}`)
+    ora().succeed(`获取仓库所属... ${gitLogin}`)
+    this.type = gitType
     this.login = gitLogin
   }
 
@@ -195,7 +230,7 @@ export default class Git {
     let repository = await this.gitServer?.getRepository(this.login, this.name)
     if (!repository) {
       const createSpinner = ora(`创建远程仓库...`).start()
-      if (this.owner === GIT_REPOSITORY_USER)
+      if (this.type === GIT_REPOSITORY_USER)
         repository = await this.gitServer?.createRepository(this.name)
       else
         repository = await this.gitServer?.createOrgRepository(this.name, this.login)
@@ -208,7 +243,44 @@ export default class Git {
         return url
       },
     })
-    log.success('仓库地址', link)
+    ora().succeed(`获取仓库地址... ${link}`)
+  }
+
+  public checkGitignore() {
+    const gitignorePath = path.resolve(this.dir, GIT_IGNORE_FILE)
+    if (!fse.existsSync(gitignorePath)) {
+      writeFile(gitignorePath, `# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+.DS_Store
+dist
+dist-ssr
+coverage
+*.local
+
+/cypress/videos/
+/cypress/screenshots/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.tsbuildinfo`)
+      log.success('.gitignore', '创建完成')
+    }
   }
 
   public createPath(file: string) {

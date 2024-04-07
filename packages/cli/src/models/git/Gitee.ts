@@ -25,8 +25,8 @@ export default class GiteeServer extends GitServer {
     }) ?? null
   }
 
-  public getRemote(): void {
-    throw new Error('Method not implemented.')
+  public getRemote(login: string, name: string): string {
+    return `git@gitee.com:${login}/${name}.git`
   }
 
   public getUser() {

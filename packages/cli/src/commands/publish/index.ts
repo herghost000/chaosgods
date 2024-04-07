@@ -1,6 +1,9 @@
 import process from 'node:process'
 import path from 'node:path'
 import fse from 'fs-extra'
+import ora from 'ora'
+import boxen from 'boxen'
+import chalk from 'chalk'
 import Command from '@/models/command'
 import log from '@/utils/log'
 import Git from '@/models/git'
@@ -31,7 +34,7 @@ export class PublishCommand extends Command {
       refreshServer: this.refreshServer,
       refreshToken: this.refreshToken,
       refreshOwner: this.refreshOwner,
-    }).init()
+    }).prepare()
     const endTime = new Date().getTime()
     log.info('发布耗时', `${(endTime - startTime) / 1000}s`)
   }
@@ -53,9 +56,16 @@ export class PublishCommand extends Command {
         version,
         dir: projectPath,
       }
-      log.info('项目名称', name)
-      log.info('项目版本', version)
-      log.info('构建命令', scripts.build)
+      ora().succeed(`获取项目信息...${boxen(`\
+      ${chalk.magenta('项目名称')} ${name}
+      ${chalk.magenta('项目版本')} ${version}
+      ${chalk.magenta('构建命令')} ${scripts.build}`, {
+        padding: 1,
+        margin: 1,
+        align: 'left',
+        borderColor: 'green',
+        borderStyle: 'round',
+      })}`)
     }
   }
 }

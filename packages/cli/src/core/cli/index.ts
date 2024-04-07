@@ -1,6 +1,6 @@
 import process from 'node:process'
 import path from 'node:path'
-import colors from 'colors/safe'
+import chalk from 'chalk'
 import { homedir } from 'node-homedir'
 import { pathExistsSync } from 'fs-extra'
 import rootCheck from 'root-check'
@@ -81,7 +81,7 @@ async function checkVersionUpdate() {
   try {
     const version = await getSemverVersion(pkgVer, pkgName)
     if (version) {
-      log.warn('版本', colors.yellow(`发现新的版本 npm install -g ${pkgName} 更新至：${version}`))
+      log.warn('版本', chalk.yellow(`发现新的版本 npm install -g ${pkgName} 更新至：${version}`))
       spinner.stopAndPersist({ symbol: '🟡' })
     }
     else { spinner.succeed() }
