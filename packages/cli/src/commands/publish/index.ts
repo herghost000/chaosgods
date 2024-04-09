@@ -15,29 +15,30 @@ export class PublishCommand extends Command {
   public refreshServer: boolean = false
   public refreshToken: boolean = false
   public refreshOwner: boolean = false
+  public buildCmd: string = ''
 
   constructor(args: any[]) {
     super(args)
   }
 
   public init(): void {
-    this.refreshServer = this.options.refreshServer
-    this.refreshToken = this.options.refreshToken
-    this.refreshOwner = this.options.refreshOwner
+    Object.assign(this, this.options)
   }
 
   public async exec() {
     const startTime = new Date().getTime()
     await this.prepare()
-    const git = await new Git({
+    const git = new Git({
       ...this.gitOptions,
       refreshServer: this.refreshServer,
       refreshToken: this.refreshToken,
       refreshOwner: this.refreshOwner,
+      buildCmd: this.buildCmd,
     })
     await git.prepare()
     await git.init()
     await git.commit()
+    await git.publish()
     const endTime = new Date().getTime()
     log.info('发布耗时', `${(endTime - startTime) / 1000}s`)
   }

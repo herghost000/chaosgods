@@ -5,6 +5,7 @@ export interface GitOptions {
   refreshServer?: boolean
   refreshToken?: boolean
   refreshOwner?: boolean
+  buildCmd?: string
 }
 
 export interface GiteeUser {
@@ -47,4 +48,8 @@ export interface GithubRepository {
   name: string
   full_name: string
   html_url: string
+}
+
+export interface CloudBuildOptions {
+  buildCmd?: string
 }

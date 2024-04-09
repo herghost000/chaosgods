@@ -119,6 +119,7 @@ function registerCommands() {
     .option('-rs, --refreshServer', '重新设置git平台', false)
     .option('-rt, --refreshToken', '重新设置平台token', false)
     .option('-ro, --refreshOwner', '重新设置仓库类型', false)
+    .option('-bc, --buildCmd <buildCmd>', '云构建命令')
     .action(exec)
 
   program.on('option:debug', () => {

@@ -7,11 +7,12 @@ import fse from 'fs-extra'
 import { confirm, input, password, select } from '@inquirer/prompts'
 import ora from 'ora'
 import terminalLink from 'terminal-link'
-import { gt, gte, inc, valid } from 'semver'
+import { gt, inc, valid } from 'semver'
 import chalk from 'chalk'
 import GithubServer from './GithubServer'
 import GiteeServer from './GiteeServer'
 import type GitServer from './GitServer'
+import CloudBuild from '@/models/cloudbuild'
 import type { GitOptions, GitOrg, GitRepository, GitUser } from '@/typings/cli'
 import { DEFAULT_CLI_HOME } from '@/core/cli/const'
 import { readFile, writeFile } from '@/utils/fs'
@@ -54,6 +55,8 @@ export default class Git {
   public refreshToken: boolean = false
   /** 是否重新设置仓库类型 */
   public refreshOwner: boolean = false
+  /** 云构建命令 */
+  public buildCmd: string = ''
   /** git客户端实例 */
   public client: SimpleGit
   /** git服务端实例 */
@@ -76,6 +79,8 @@ export default class Git {
   public remote: string = ''
   /** 当前开发版本分支 */
   public branch: string = ''
+  /** 仓库主分支名称 */
+  public mainBranchName: string = ''
 
   constructor(options: GitOptions) {
     Object.assign(this, options)
@@ -104,9 +109,30 @@ export default class Git {
     await this.getCorrectVersion()
     await this.checkStash()
     await this.checkConflicted()
+    await this.checkUnCommitted()
     await this.checkoutBranch(this.branch)
     await this.pullRemoteMainAndDevelop()
     await this.pushRemote(this.branch)
+    await this.createTag()
+  }
+
+  public async publish() {
+    await this.preparePublish()
+    const cloudbuild = new CloudBuild(this, {
+      buildCmd: this.buildCmd,
+    })
+    await cloudbuild.init()
+  }
+
+  public async preparePublish() {
+    if (this.buildCmd) {
+      const buildCmdSps = this.buildCmd.split(' ')
+      if (buildCmdSps[0] !== 'pnpm')
+        throw new Error('build命令必须以pnpm开头')
+    }
+    else {
+      this.buildCmd = 'pnpm run build'
+    }
   }
 
   /**
@@ -142,12 +168,12 @@ export default class Git {
     if (!releaseVersion) {
       this.branch = `${Git.VERSION_DEVELOP}/${devVersion}`
     }
-    else if (gte(this.version, releaseVersion)) {
-      log.info('本地版本大于线上最新版本', `${devVersion} >= ${releaseVersion}`)
+    else if (gt(this.version, releaseVersion)) {
+      log.info('本地版本大于线上最新版本', `${devVersion} > ${releaseVersion}`)
       this.branch = `${Git.VERSION_DEVELOP}/${devVersion}`
     }
     else {
-      log.info('本地版本小于线上最新版本', `${devVersion} < ${releaseVersion}`)
+      log.info('本地版本小于等于线上最新版本', `${devVersion} <= ${releaseVersion}`)
       const standardize = await select({
         message: '请选择版本升级规范',
         default: 'patch',
@@ -188,30 +214,21 @@ export default class Git {
   }
 
   public async getRemoteVersions(type: string) {
-    const checkSpinner = ora(`检查远程版本... ${type}`).start()
-    if (type === Git.VERSION_RELEASE) {
-      const tags = await this.client.tags()
-      checkSpinner.succeed(`检查远程版本... ${type}: ${tags.all.length}`)
-      const reg = /release\/(\d+\.\d+\.\d+-?\S*?\.?\d*)/im
-      return tags.all.map((tag) => {
-        const match = reg.exec(tag)
-        if (match && valid(match[1]))
-          return match[1]
-        return null
-      }).filter(Boolean).sort((a, b) => gt(b as string, a as string) ? 1 : -1) as string[]
-    }
-    else {
-      const reg = /develop\/(\d+\.\d+\.\d+-?\S*?\.?\d*)/im
-      const branchs = await this.client.branch(['-r'])
-      const versions = branchs.all.map((branch) => {
-        const match = reg.exec(branch)
-        if (match && valid(match[1]))
-          return match[1]
-        return null
-      }).filter(Boolean).sort((a, b) => gt(b as string, a as string) ? 1 : -1) as string[]
-      checkSpinner.succeed(`检查远程版本... ${type}: ${versions.length}`)
-      return versions
-    }
+    const checkSpinner = ora(`获取远程版本... ${type}`).start()
+    const remoteList = await this.client.listRemote(['--refs'])
+    checkSpinner.succeed(`获取远程版本... ${type}`)
+    let reg: RegExp
+    if (type === Git.VERSION_RELEASE)
+      reg = /.+?refs\/tags\/release\/(\d+\.\d+\.\d+-?\S*?\.?\d*)/im
+    else
+      reg = /.+?refs\/heads\/develop\/(\d+\.\d+\.\d+-?\S*?\.?\d*)/im
+
+    return remoteList.split('\n').map((tag) => {
+      const match = reg.exec(tag)
+      if (match && valid(match[1]))
+        return match[1]
+      return null
+    }).filter(Boolean).sort((a, b) => gt(b as string, a as string) ? 1 : -1) as string[]
   }
 
   public isInitGit() {
@@ -254,6 +271,57 @@ export default class Git {
     const pushSpinner = ora(`推送代码到远程...`).start()
     await this.client.push(['-u', 'origin', name])
     pushSpinner.succeed(`推送代码到远程... ${name}`)
+  }
+
+  public async createTag() {
+    await this.checkTag()
+    await this.checkRemoteMain()
+    await this.checkoutBranch(this.mainBranchName)
+    await this.mergeBranchToMain()
+    await this.pushRemote(this.mainBranchName)
+    await this.deleteLocalBranch()
+    await this.deleteRemoteBranch()
+  }
+
+  public async checkTag() {
+    const tag = `${Git.VERSION_RELEASE}/${this.version}`
+    const tagList = await this.getRemoteVersions(Git.VERSION_RELEASE)
+    if (tagList.includes(this.version)) {
+      const delSpinner = ora(`删除远程tag... ${tag}`).start()
+      await this.client.push(['origin', `:refs/tags/${tag}`])
+      delSpinner.succeed()
+    }
+    const localTagList = await this.client.tags()
+    if (localTagList.all.includes(tag)) {
+      const delSpinner = ora(`删除本地tag... ${tag}`).start()
+      await this.client.tag(['-d', tag])
+      delSpinner.succeed()
+    }
+    const localSpinner = ora(`创建本地tag... ${tag}`).start()
+    await this.client.addTag(tag)
+    localSpinner.succeed()
+
+    const remoteSpinner = ora(`创建远程tag... ${tag}`).start()
+    await this.client.pushTags('origin')
+    remoteSpinner.succeed()
+  }
+
+  async mergeBranchToMain() {
+    const mergeSpinner = ora(`合并分支 [${this.branch}] -> [${this.mainBranchName}]...`).start()
+    await this.client.mergeFromTo(this.branch, this.mainBranchName)
+    mergeSpinner.succeed()
+  }
+
+  async deleteLocalBranch() {
+    const delSpinner = ora(`删除本地分支... ${this.branch}`).start()
+    await this.client.deleteLocalBranch(this.branch)
+    delSpinner.succeed()
+  }
+
+  async deleteRemoteBranch() {
+    const delSpinner = ora(`删除远程分支... ${this.branch}`).start()
+    await this.client.push(['origin', '--delete', this.branch])
+    delSpinner.succeed()
   }
 
   public async pullRemote(name: string, options: any = {}) {
@@ -304,40 +372,46 @@ export default class Git {
   public async checkUnCommitted() {
     const checkSpinner = ora(`检查未提交文件...`).start()
     const status = await this.client.status()
+    checkSpinner.succeed()
     if (status.not_added.length || status.created.length || status.deleted.length || status.modified.length || status.renamed.length) {
       await this.client.add(status.not_added)
       await this.client.add(status.created)
       await this.client.add(status.deleted)
       await this.client.add(status.modified)
       await this.client.add(status.renamed.map(renamed => renamed.to))
+
+      const isCommit = await confirm({
+        message: '是否提交本地修改文件？',
+        default: false,
+      })
+
+      if (!isCommit)
+        return
+
+      const message = await input({
+        message: '请输入提交说明',
+        default: '',
+      })
+
+      const commitSpinner = ora(`提交文件...`).start()
+      await this.client.commit(message)
+      commitSpinner.succeed()
     }
-    checkSpinner.succeed()
-    if (!status.staged.length)
-      return
-
-    const isCommit = await confirm({
-      message: '是否提交本地修改文件？',
-      default: false,
-    })
-
-    if (!isCommit)
-      return
-
-    const message = await input({
-      message: '请输入提交说明',
-      default: '',
-    })
-
-    const commitSpinner = ora(`提交文件...`).start()
-    await this.client.commit(message)
-    commitSpinner.succeed()
   }
 
   public async checkRemoteMain() {
     const checkSpinner = ora(`检查远程仓库...`).start()
     const branch = await this.client.branch(['-r'])
     checkSpinner.succeed()
-    return branch.all.includes('origin/main') || branch.all.includes('origin/master')
+    if (branch.all.includes('origin/main')) {
+      this.mainBranchName = 'main'
+      return true
+    }
+    else if (branch.all.includes('origin/master')) {
+      this.mainBranchName = 'master'
+      return true
+    }
+    return false
   }
 
   public checkHomePath() {
