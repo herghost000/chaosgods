@@ -10,7 +10,8 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "paths": {
-      "@chaosgods/*": ["packages/*/src"]
+      "@chaosgods/*": ["packages/*/src"],
+      "@chaosgods/cli": ["packages/cli/src"]
     },
     "resolveJsonModule": true,
     "types": ["vitest/globals"],

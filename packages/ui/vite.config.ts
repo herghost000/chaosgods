@@ -8,7 +8,7 @@ export default defineConfig({
     dts({
       entryRoot: 'src',
       outDir: ['lib', 'es'],
-      exclude: ['**/tests/**'],
+      exclude: ['**/tests/**', '**/__tests__/**'],
     }),
     vue(),
     vueJsx(),
