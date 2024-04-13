@@ -1,4 +1,4 @@
-name: Dependabot auto-merge
+name: Dependabot Auto Merge For @chaosgods/*
 on: pull_request
 
 permissions:
@@ -15,8 +15,8 @@ jobs:
         uses: dependabot/fetch-metadata@v1.1.1
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
-      - name: Enable auto-merge for theme
-        if: ${{contains(steps.metadata.outputs.dependency-names, '@vue/theme') && steps.metadata.outputs.update-type != 'version-update:semver-major'}}
+      - name: Enable auto-merge for version
+        if: ${{contains(steps.metadata.outputs.dependency-names, '@chaosgods/*') && steps.metadata.outputs.update-type != 'version-update:semver-major'}}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
