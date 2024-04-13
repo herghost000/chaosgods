@@ -64,7 +64,7 @@
     "vite": "^5.2.8",
     "vite-plugin-dts": "^3.8.1",
     "vite-plugin-vitepress-demo": "^2.2.1",
-    "vitepress": "1.0.2",
+    "vitepress": "1.1.0",
     "vitest": "^1.5.0",
     "vue-tsc": "^2.0.13",
     "zx": "^8.0.1"
