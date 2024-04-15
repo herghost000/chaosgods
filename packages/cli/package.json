@@ -22,7 +22,7 @@
     "build": "esno scripts/build.ts"
   },
   "dependencies": {
-    "@inquirer/prompts": "^4.3.2",
+    "@inquirer/prompts": "^5.0.0",
     "axios": "^1.6.8",
     "boxen": "^7.1.1",
     "chalk": "^5.3.0",
