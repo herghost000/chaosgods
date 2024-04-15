@@ -35,6 +35,6 @@
     "build": "tsup"
   },
   "dependencies": {
-    "qs": "^6.12.0"
+    "qs": "^6.12.1"
   }
 }
