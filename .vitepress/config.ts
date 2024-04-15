@@ -13,6 +13,9 @@ export default defineConfig({
     'packages/utils/src/:path/(.*)': 'utils/:path/(.*)',
   },
   themeConfig: {
+    search: {
+      provider: 'local',
+    },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '首页', link: '/' },
