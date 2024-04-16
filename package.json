@@ -27,7 +27,7 @@
     "commit": "cz"
   },
   "dependencies": {
-    "vue": "^3.4.21"
+    "vue": "^3.4.22"
   },
   "devDependencies": {
     "@ant-design/colors": "^7.0.2",
