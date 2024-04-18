@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@ant-design/colors": "^7.0.2",
-    "@antfu/eslint-config": "^2.13.3",
+    "@antfu/eslint-config": "^2.15.0",
     "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^19.2.2",
     "@commitlint/config-conventional": "^19.2.2",
