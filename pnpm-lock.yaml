@@ -124,8 +124,8 @@ importers:
         specifier: ^2.0.13
         version: 2.0.13(typescript@5.4.5)
       zx:
-        specifier: ^8.0.1
-        version: 8.0.1
+        specifier: ^8.0.2
+        version: 8.0.2
 
   packages/cli:
     dependencies:
@@ -10823,8 +10823,8 @@ packages:
       commander: 9.5.0
     dev: true
 
-  /zx@8.0.1:
-    resolution: {integrity: sha512-Y+ITW1GQjADk7qgrbhnukMgoNsJmlyx53cUQ6/6NXU+BMBdCbTc6flTOHUctmzKvPjTmdwaddzJY/dbLie9sQg==}
+  /zx@8.0.2:
+    resolution: {integrity: sha512-3g+ePtPYmyrjRuASlJiUhkje1je4a47woML/fzTKBb9PA5BzRQbSswwyJ8nlFWJjA1ORRi6TMyAdhuz/jK+Gaw==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     optionalDependencies:
