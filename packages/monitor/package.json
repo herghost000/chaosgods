@@ -29,7 +29,8 @@
   "jsdelivr": "dist/index.global.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "typings"
   ],
   "scripts": {
     "build": "tsup"

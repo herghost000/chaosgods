@@ -1,7 +1,5 @@
 import type { InitOptions } from '../typings/monitor'
 
-export type { InitOptions } from '../typings/monitor'
-
 export * from './collect'
 export * from './upload'
 
