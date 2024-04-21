@@ -17,8 +17,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: [...viteAlias, {
-      find: /^@\//,
-      replacement: path.join(path.resolve(baseUrl, 'src'), '/'),
+      find: /^@(?=\/)/,
+      replacement: path.resolve(baseUrl, 'src'),
     }],
   },
   build: {

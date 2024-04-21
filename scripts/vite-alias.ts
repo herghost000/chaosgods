@@ -5,7 +5,7 @@ const baseUrl = fileURLToPath(new URL('../', import.meta.url))
 
 export default [
   {
-    find: /^@chaosgods\/(.*)\//,
+    find: /^@chaosgods\/([^/]+)/,
     replacement: path.resolve(baseUrl, 'packages/$1/src'),
   },
 ]
