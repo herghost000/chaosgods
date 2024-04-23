@@ -34,7 +34,7 @@
     "@ant-design/colors": "^7.0.2",
     "@antfu/eslint-config": "^2.15.0",
     "@changesets/cli": "^2.27.1",
-    "@commitlint/cli": "^19.2.2",
+    "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@tsconfig/node20": "^20.1.4",
     "@types/fs-extra": "^11.0.4",
