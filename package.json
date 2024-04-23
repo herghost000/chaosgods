@@ -63,7 +63,7 @@
     "unbuild": "^2.0.0",
     "unplugin-vue-components": "^0.26.0",
     "vite": "^5.2.10",
-    "vite-plugin-dts": "^3.8.3",
+    "vite-plugin-dts": "^3.9.0",
     "vite-plugin-vitepress-demo": "^2.2.1",
     "vitepress": "1.1.3",
     "vitest": "^1.5.0",
