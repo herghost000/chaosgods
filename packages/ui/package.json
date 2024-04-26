@@ -40,7 +40,7 @@
     "@chaosgods/utils": "workspace:^",
     "@floating-ui/vue": "^1.0.6",
     "lodash-es": "^4.17.21",
-    "vue": "^3.4.23"
+    "vue": "^3.4.25"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12"
