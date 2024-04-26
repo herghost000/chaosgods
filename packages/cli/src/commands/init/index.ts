@@ -20,6 +20,7 @@ const TEMPLATE_NORMAL = 'normal'
 const TEMPLATE_CUSTOM = 'custom'
 
 export class InitCommand extends Command {
+  public projectName: string = ''
   public force: boolean = false
   public tpls: Record<string, string>[] = []
   public tpl: Record<string, string> = {}
@@ -34,6 +35,7 @@ export class InitCommand extends Command {
   }
 
   public init(): void {
+    this.projectName = this.commands[0] || 'project'
     this.force = this.options.force
   }
 
@@ -219,7 +221,7 @@ require("${rootPath}");
     })
     ret.name = await input({
       message: '请输入项目名称',
-      default: this.projectName || 'project',
+      default: this.projectName,
       validate(value) {
         return /^[a-zA-Z]+(?:[_-]?[a-zA-Z0-9])*$/.test(value)
       },

@@ -122,6 +122,10 @@ function registerCommands() {
     .option('-bc, --buildCmd <buildCmd>', '云构建命令')
     .action(exec)
 
+  program
+    .command('env [actionName]')
+    .action(exec)
+
   program.on('option:debug', () => {
     process.env.CLI_LOG_LEVEL = log.level = 'verbose'
   })

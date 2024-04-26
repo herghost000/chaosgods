@@ -1,3 +1,6 @@
+import path from 'node:path'
+import fs from 'node:fs'
+import process from 'node:process'
 import fse from 'fs-extra'
 
 export function readFile(path: string, options: { json?: boolean } = {}) {
@@ -26,4 +29,16 @@ export function writeFile(path: string, data: string, options: { rewrite?: boole
     fse.writeFileSync(path, data)
     return true
   }
+}
+
+export function hasGlobalCmd(command: string) {
+  const pathList = (process.env.PATH || '').split(path.delimiter) // process.env.PATH.split(path.delimiter)
+
+  for (const dir of pathList) {
+    const commandPath = path.join(dir, command)
+    if (fs.existsSync(commandPath))
+      return true
+  }
+
+  return false
 }

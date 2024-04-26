@@ -20,9 +20,9 @@ declare module 'npminstall' {
     // forbiddenLicenses: forbit install packages which used these licenses
   }
 
-type NpminstallFunction = (options: InstallOptions, context?: any) => Promise<void>
+    type NpminstallFunction = (options: InstallOptions, context?: any) => Promise<void>
 
-const npminstall: NpminstallFunction
+    const npminstall: NpminstallFunction
 
-export default npminstall
+    export default npminstall
 }

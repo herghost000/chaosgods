@@ -6,7 +6,7 @@ import log from '@/utils/log'
 import { MIN_NODE_VERSION } from '@/core/cli/const'
 
 export default abstract class Command {
-  public projectName!: string
+  public commands!: string[]
   public command!: CommanderCommand
   public options!: OptionValues
   private _args: any[]
@@ -35,7 +35,7 @@ export default abstract class Command {
   public initArgs() {
     this.command = this._args.pop()
     this.options = this._args.pop()
-    this.projectName = this._args[0]
+    this.commands = this._args
   }
 
   public abstract init(): void
