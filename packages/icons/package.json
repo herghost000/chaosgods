@@ -35,6 +35,6 @@
     "build:umd": "vite build --config vite.umd.config.ts"
   },
   "dependencies": {
-    "vue": "^3.4.25"
+    "vue": "^3.4.26"
   }
 }
