@@ -67,7 +67,7 @@
     "vite-plugin-vitepress-demo": "^2.2.1",
     "vitepress": "1.1.4",
     "vitest": "^1.5.3",
-    "vue-tsc": "^2.0.15",
+    "vue-tsc": "^2.0.16",
     "zx": "^8.0.2"
   },
   "lint-staged": {
