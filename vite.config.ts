@@ -26,7 +26,7 @@ function buildBasePlugins(): PluginOption[] {
   ]
 }
 
-function buildTestPlugins(mode: string): PluginOption[] {
+function buildVitestPlugins(mode: string): PluginOption[] {
   if (mode !== 'test')
     return []
 
@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       ...buildBasePlugins(),
-      ...buildTestPlugins(mode),
+      ...buildVitestPlugins(mode),
     ],
     resolve: {
       alias: viteAlias,
