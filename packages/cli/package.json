@@ -40,7 +40,7 @@
     "ora": "^8.0.1",
     "pkg-dir": "^8.0.0",
     "root-check": "^2.0.0",
-    "semver": "^7.6.0",
+    "semver": "^7.6.1",
     "simple-git": "^3.24.0",
     "terminal-link": "^3.0.0",
     "url-join": "^5.0.0"
