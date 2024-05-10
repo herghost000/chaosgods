@@ -184,8 +184,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       semver:
-        specifier: ^7.6.0
-        version: 7.6.0
+        specifier: ^7.6.2
+        version: 7.6.2
       simple-git:
         specifier: ^3.24.0
         version: 3.24.0
@@ -833,7 +833,7 @@ packages:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /@changesets/assemble-release-plan@6.0.0:
@@ -844,7 +844,7 @@ packages:
       '@changesets/get-dependents-graph': 2.0.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /@changesets/changelog-git@0.2.0:
@@ -885,7 +885,7 @@ packages:
       p-limit: 2.3.0
       preferred-pm: 3.1.3
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.2
       spawndamnit: 2.0.0
       term-size: 2.2.1
       tty-table: 4.2.3
@@ -916,7 +916,7 @@ packages:
       '@manypkg/get-packages': 1.1.3
       chalk: 2.4.2
       fs-extra: 7.0.1
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /@changesets/get-release-plan@4.0.0:
@@ -1083,7 +1083,7 @@ packages:
     engines: {node: '>=v18'}
     dependencies:
       '@commitlint/types': 19.0.3
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /@commitlint/lint@19.2.2:
@@ -2052,7 +2052,7 @@ packages:
       promise-all-reject-late: 1.0.1
       promise-call-limit: 1.0.2
       read-package-json-fast: 3.0.2
-      semver: 7.6.0
+      semver: 7.6.2
       ssri: 10.0.5
       treeverse: 3.0.0
       walk-up-path: 3.0.1
@@ -2066,14 +2066,14 @@ packages:
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.6.0
+      semver: 7.6.2
     dev: false
 
   /@npmcli/fs@3.1.0:
     resolution: {integrity: sha512-7kZUAaLscfgbwBQRbvdMYaZOWyMEcPTH/tJjnyAWJ/dvvs9Ef+CERx/qJb9GExJpl1qipaDGn7KqHnFGGixd0w==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.2
     dev: false
 
   /@npmcli/git@4.1.0:
@@ -2086,7 +2086,7 @@ packages:
       proc-log: 3.0.0
       promise-inflight: 1.0.1
       promise-retry: 2.0.1
-      semver: 7.6.0
+      semver: 7.6.2
       which: 3.0.1
     transitivePeerDependencies:
       - bluebird
@@ -2118,7 +2118,7 @@ packages:
       cacache: 17.1.4
       json-parse-even-better-errors: 3.0.1
       pacote: 15.2.0
-      semver: 7.6.0
+      semver: 7.6.2
     transitivePeerDependencies:
       - bluebird
       - supports-color
@@ -2153,7 +2153,7 @@ packages:
       json-parse-even-better-errors: 3.0.1
       normalize-package-data: 5.0.0
       proc-log: 3.0.0
-      semver: 7.6.0
+      semver: 7.6.2
     transitivePeerDependencies:
       - bluebird
     dev: false
@@ -2764,7 +2764,7 @@ packages:
       graphemer: 1.4.0
       ignore: 5.3.1
       natural-compare: 1.4.0
-      semver: 7.6.0
+      semver: 7.6.2
       ts-api-utils: 1.3.0(typescript@5.4.5)
       typescript: 5.4.5
     transitivePeerDependencies:
@@ -2853,7 +2853,7 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
-      semver: 7.6.0
+      semver: 7.6.2
       ts-api-utils: 1.3.0(typescript@5.4.5)
       typescript: 5.4.5
     transitivePeerDependencies:
@@ -2875,7 +2875,7 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.4
-      semver: 7.6.0
+      semver: 7.6.2
       ts-api-utils: 1.3.0(typescript@5.4.5)
       typescript: 5.4.5
     transitivePeerDependencies:
@@ -2895,7 +2895,7 @@ packages:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.4.5)
       eslint: 8.57.0
-      semver: 7.6.0
+      semver: 7.6.2
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -2914,7 +2914,7 @@ packages:
       '@typescript-eslint/types': 7.7.1
       '@typescript-eslint/typescript-estree': 7.7.1(typescript@5.4.5)
       eslint: 8.57.0
-      semver: 7.6.0
+      semver: 7.6.2
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -3764,7 +3764,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.2
     dev: false
 
   /bundle-require@4.0.2(esbuild@0.19.12):
@@ -4739,7 +4739,7 @@ packages:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /ejs@3.1.10:
@@ -5007,7 +5007,7 @@ packages:
       eslint: '>=6.0.0'
     dependencies:
       eslint: 8.57.0
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /eslint-config-flat-gitignore@0.1.5:
@@ -5095,7 +5095,7 @@ packages:
       get-tsconfig: 4.7.3
       is-glob: 4.0.3
       minimatch: 9.0.4
-      semver: 7.6.0
+      semver: 7.6.2
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5115,7 +5115,7 @@ packages:
       eslint: 8.57.0
       esquery: 1.5.0
       is-builtin-module: 3.2.1
-      semver: 7.6.0
+      semver: 7.6.2
       spdx-expression-parse: 4.0.0
     transitivePeerDependencies:
       - supports-color
@@ -5163,7 +5163,7 @@ packages:
       globals: 15.0.0
       ignore: 5.3.1
       minimatch: 9.0.4
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /eslint-plugin-no-only-tests@3.1.0:
@@ -5235,7 +5235,7 @@ packages:
       read-pkg-up: 7.0.1
       regexp-tree: 0.1.27
       regjsparser: 0.10.0
-      semver: 7.6.0
+      semver: 7.6.2
       strip-indent: 3.0.0
     transitivePeerDependencies:
       - supports-color
@@ -5290,7 +5290,7 @@ packages:
       natural-compare: 1.4.0
       nth-check: 2.1.1
       postcss-selector-parser: 6.0.16
-      semver: 7.6.0
+      semver: 7.6.2
       vue-eslint-parser: 9.4.2(eslint@8.57.0)
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
@@ -6806,7 +6806,7 @@ packages:
       acorn: 8.11.3
       eslint-visitor-keys: 3.4.3
       espree: 9.6.1
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /jsonc-parser@3.2.1:
@@ -7150,7 +7150,7 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.2
     dev: true
 
   /make-fetch-happen@10.2.1:
@@ -7610,7 +7610,7 @@ packages:
       nopt: 6.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.6.0
+      semver: 7.6.2
       tar: 6.2.1
       which: 2.0.2
     transitivePeerDependencies:
@@ -7662,7 +7662,7 @@ packages:
     dependencies:
       hosted-git-info: 6.1.1
       is-core-module: 2.13.1
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-license: 3.0.4
     dev: false
 
@@ -7687,7 +7687,7 @@ packages:
     resolution: {integrity: sha512-W29RiK/xtpCGqn6f3ixfRYGk+zRyr+Ew9F2E20BfXxT5/euLdA/Nm7fO7OeTGuAmTs30cpgInyJ0cYe708YTZw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.2
     dev: false
 
   /npm-normalize-package-bin@1.0.1:
@@ -7705,7 +7705,7 @@ packages:
     dependencies:
       hosted-git-info: 6.1.1
       proc-log: 3.0.0
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-name: 5.0.0
     dev: false
 
@@ -7714,7 +7714,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       hosted-git-info: 4.1.0
-      semver: 7.6.0
+      semver: 7.6.2
       validate-npm-package-name: 3.0.0
     dev: false
 
@@ -7732,7 +7732,7 @@ packages:
       npm-install-checks: 6.3.0
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 10.1.0
-      semver: 7.6.0
+      semver: 7.6.2
     dev: false
 
   /npm-registry-fetch@14.0.5:
@@ -7795,7 +7795,7 @@ packages:
       p-map: 2.1.0
       pacote: 15.2.0
       rc: 1.2.8
-      semver: 7.6.0
+      semver: 7.6.2
       tar: 6.2.1
       urllib: 3.23.0
     transitivePeerDependencies:
@@ -9039,12 +9039,10 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /semver@7.6.0:
-    resolution: {integrity: sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==}
+  /semver@7.6.2:
+    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
     engines: {node: '>=10'}
     hasBin: true
-    dependencies:
-      lru-cache: 6.0.0
 
   /set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
@@ -10367,7 +10365,7 @@ packages:
       espree: 9.6.1
       esquery: 1.5.0
       lodash: 4.17.21
-      semver: 7.6.0
+      semver: 7.6.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -10387,7 +10385,7 @@ packages:
     dependencies:
       '@volar/typescript': 1.11.1
       '@vue/language-core': 1.8.27(typescript@5.4.5)
-      semver: 7.6.0
+      semver: 7.6.2
       typescript: 5.4.5
     dev: true
 
@@ -10399,7 +10397,7 @@ packages:
     dependencies:
       '@volar/typescript': 2.2.0
       '@vue/language-core': 2.0.16(typescript@5.4.5)
-      semver: 7.6.0
+      semver: 7.6.2
       typescript: 5.4.5
     dev: true
 
