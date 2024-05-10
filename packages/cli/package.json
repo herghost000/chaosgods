@@ -31,7 +31,7 @@
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "fs-extra": "^11.2.0",
-    "glob": "^10.3.12",
+    "glob": "^10.3.14",
     "gradient-string": "^2.0.2",
     "import-local": "^3.1.0",
     "node-homedir": "^2.0.0",
