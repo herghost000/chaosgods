@@ -34,7 +34,7 @@ await esbuild.build({
   format: 'cjs',
   platform: 'node',
   minify: false,
-  target: 'node14',
+  target: 'node16',
   alias: {
     '@': path.resolve(baseUrl, '../src'),
   },

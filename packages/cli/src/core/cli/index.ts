@@ -40,7 +40,7 @@ function checkBanner() {
     { color: '#42d392', pos: 0 },
     { color: '#42d392', pos: 0.1 },
     { color: '#647eff', pos: 1 },
-  ])(`CHAOSGODS - 前端管理工具 ${pkg.version}`))
+  ])(`CHAOSGODS - 前端研发流程脚手架 ${pkg.version}`))
   // eslint-disable-next-line no-console
   console.log()
 }
@@ -99,7 +99,7 @@ function registerCommands() {
   program
     .name(Object.keys(pkg.bin)[0])
     .usage('<command> [options]')
-    .description('CLI to some JavaScript string utilities')
+    .description('CLI to Front-end R&D process')
     .version(pkg.version)
     .option('-d, --debug', '是否开启调试模式', false)
     .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '')

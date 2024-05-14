@@ -3,6 +3,10 @@ import fs from 'node:fs'
 import process from 'node:process'
 import fse from 'fs-extra'
 
+export function readJson(file: string) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'))
+}
+
 export function readFile(path: string, options: { json?: boolean } = {}) {
   if (fse.pathExistsSync(path)) {
     const buffer = fse.readFileSync(path)

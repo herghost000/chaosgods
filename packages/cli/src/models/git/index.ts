@@ -18,7 +18,13 @@ import { DEFAULT_CLI_HOME } from '@/core/cli/const'
 import { readFile, writeFile } from '@/utils/fs'
 import log from '@/utils/log'
 
+// TODO 使用适配器适配不同平台Git服务
+// TODO 新增功能后自动发布功能
+// TODO 自动创建功能分支
+// TODO 自动创建热修复分支与issus
+// TODO 自动创建Bug修复分支与issus
 export default class Git {
+  // SECTION 常量
   /** 存储用户git配置的根目录名 */
   public static readonly ROOT_DIR = '.git'
   /** 存储用户托管git平台的文件 */
@@ -43,6 +49,8 @@ export default class Git {
   public static readonly VERSION_RELEASE = 'release'
   /** 开发分支前缀名 */
   public static readonly VERSION_DEVELOP = 'develop'
+  // !SECTION
+  // SECTION 属性
   /** 仓库名称 */
   public name: string = ''
   /** 仓库版本 */
@@ -81,6 +89,7 @@ export default class Git {
   public branch: string = ''
   /** 仓库主分支名称 */
   public mainBranchName: string = ''
+  // !SECTION
 
   constructor(options: GitOptions) {
     Object.assign(this, options)
@@ -105,6 +114,11 @@ export default class Git {
     await this.initCommit()
   }
 
+  /**
+   * @zh 初始化仓库并添加远程仓库
+   *
+   * @memberof Git
+   */
   public async commit() {
     await this.getCorrectVersion()
     await this.checkStash()
@@ -139,9 +153,10 @@ export default class Git {
    * @zh 检查stash区是否存在未恢复的代码，如果存在则恢复
    * @en Check if there are any unstaged changes in the stash area, and restore them if found.
    *
+   * @return {*}  {Promise<void>}
    * @memberof Git
    */
-  public async checkStash() {
+  public async checkStash(): Promise<void> {
     const stashList = await this.client.stashList()
     if (stashList.all.length) {
       const stashSpinner = ora('恢复stash区...').start()
@@ -154,9 +169,10 @@ export default class Git {
    * @zh 根据远程和本地版本生成正确的分支版本。
    * @en Generate the correct version for the branch based on remote and local versions.
    *
+   * @return {*}  {Promise<void>}
    * @memberof Git
    */
-  public async getCorrectVersion() {
+  public async getCorrectVersion(): Promise<void> {
     const remoteVersions = await this.getRemoteVersions(Git.VERSION_RELEASE)
     let releaseVersion: string = ''
     if (remoteVersions && remoteVersions.length)
@@ -267,7 +283,14 @@ export default class Git {
     }
   }
 
-  public async pushRemote(name: string) {
+  /**
+   * @zh 推送指定分支到远程仓库
+   *
+   * @param {string} name 分支名称
+   * @return {*}  {Promise<void>}
+   * @memberof Git
+   */
+  public async pushRemote(name: string): Promise<void> {
     const pushSpinner = ora(`推送代码到远程...`).start()
     await this.client.push(['-u', 'origin', name])
     pushSpinner.succeed(`推送代码到远程... ${name}`)
@@ -306,7 +329,13 @@ export default class Git {
     remoteSpinner.succeed()
   }
 
-  async mergeBranchToMain() {
+  /**
+   * @zh 合并当前分支到主分支
+   *
+   * @return {*}  {Promise<void>}
+   * @memberof Git
+   */
+  public async mergeBranchToMain(): Promise<void> {
     const mergeSpinner = ora(`合并分支 [${this.branch}] -> [${this.mainBranchName}]...`).start()
     await this.client.mergeFromTo(this.branch, this.mainBranchName)
     mergeSpinner.succeed()
@@ -333,7 +362,8 @@ export default class Git {
   /**
    * 检查冲突文件，如果有冲突文件则抛出错误。
    *
-   * @return {Promise<void>}
+   * @return {*}  {Promise<void>}
+   * @memberof Git
    */
   public async checkConflicted(): Promise<void> {
     const checkSpinner = ora(`检查冲突文件...`).start()
@@ -345,7 +375,14 @@ export default class Git {
     checkSpinner.succeed(`检查冲突文件... ${chalk.bold.whiteBright.bgGreen(' N/A ')}`)
   }
 
-  public async checkoutBranch(branch: string) {
+  /**
+   * 切换分支，如果分支不存在则创建
+   *
+   * @param {string} branch 分支名称
+   * @return {*}  {Promise<void>}
+   * @memberof Git
+   */
+  public async checkoutBranch(branch: string): Promise<void> {
     const checkSpinner = ora(`切换分支... ${branch}`).start()
     const localBranchs = await this.client.branchLocal()
     if (localBranchs.all.includes(branch))
@@ -355,7 +392,13 @@ export default class Git {
     checkSpinner.succeed()
   }
 
-  public async pullRemoteMainAndDevelop() {
+  /**
+   * 合并远程主分支与当前远程分支到当前分支
+   *
+   * @return {*}  {Promise<void>}
+   * @memberof Git
+   */
+  public async pullRemoteMainAndDevelop(): Promise<void> {
     const pullSpinner = ora(`合并分支 [main] -> [${this.branch}]...`).start()
     await this.pullRemote('main')
     pullSpinner.succeed()
@@ -369,37 +412,53 @@ export default class Git {
     }
   }
 
-  public async checkUnCommitted() {
+  /**
+   * @zh 检查未提交文件并提交到本地仓库
+   *
+   * @return {*}  {Promise<void>}
+   * @memberof Git
+   */
+  public async checkUnCommitted(): Promise<void> {
     const checkSpinner = ora(`检查未提交文件...`).start()
     const status = await this.client.status()
     checkSpinner.succeed()
+
     if (status.not_added.length || status.created.length || status.deleted.length || status.modified.length || status.renamed.length) {
       await this.client.add(status.not_added)
       await this.client.add(status.created)
       await this.client.add(status.deleted)
       await this.client.add(status.modified)
       await this.client.add(status.renamed.map(renamed => renamed.to))
-
-      const isCommit = await confirm({
-        message: '是否提交本地修改文件？',
-        default: false,
-      })
-
-      if (!isCommit)
-        return
-
-      const message = await input({
-        message: '请输入提交说明',
-        default: '',
-      })
-
-      const commitSpinner = ora(`提交文件...`).start()
-      await this.client.commit(message)
-      commitSpinner.succeed()
     }
+
+    if (!status.staged.length)
+      return
+
+    const isCommit = await confirm({
+      message: '是否提交本地修改文件？',
+      default: false,
+    })
+
+    if (!isCommit)
+      return
+
+    const message = await input({
+      message: '请输入提交说明',
+      default: '',
+    })
+
+    const commitSpinner = ora(`提交文件...`).start()
+    await this.client.commit(message)
+    commitSpinner.succeed()
   }
 
-  public async checkRemoteMain() {
+  /**
+   * 检查远程主分支是否存在并设置主分支名
+   *
+   * @return {*}  {Promise<boolean>} 存在主分支返回true，否则返回false
+   * @memberof Git
+   */
+  public async checkRemoteMain(): Promise<boolean> {
     const checkSpinner = ora(`检查远程仓库...`).start()
     const branch = await this.client.branch(['-r'])
     checkSpinner.succeed()
@@ -561,7 +620,12 @@ export default class Git {
     ora().succeed(`获取仓库地址... ${link}`)
   }
 
-  public checkGitignore() {
+  /**
+   * @zh 检查git忽略文件是否存在，如果不存在忽略文件将创建新的默认忽略文件
+   *
+   * @memberof Git
+   */
+  public checkGitignore(): void {
     const gitignorePath = path.resolve(this.dir, Git.IGNORE_FILE)
     if (!fse.existsSync(gitignorePath)) {
       writeFile(gitignorePath, `# Logs
@@ -598,7 +662,14 @@ coverage
     }
   }
 
-  public createPath(file: string) {
+  /**
+   * @zh 如果文件不存在则创建文件
+   *
+   * @param {string} file 文件路径
+   * @return {*}  {string} 文件路径
+   * @memberof Git
+   */
+  public createPath(file: string): string {
     const rootDir = path.resolve(this.homePath, Git.ROOT_DIR)
     const filePath = path.resolve(rootDir, file)
     fse.ensureDirSync(rootDir)
