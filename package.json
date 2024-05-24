@@ -68,7 +68,7 @@
     "vitepress": "1.1.4",
     "vitest": "^1.6.0",
     "vue-tsc": "^2.0.16",
-    "zx": "^8.0.2"
+    "zx": "^8.1.1"
   },
   "lint-staged": {
     "./**/*.{ts,json,vue,md,jsx,tsx,js,css,less}": [
