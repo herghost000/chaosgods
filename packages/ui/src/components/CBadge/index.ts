@@ -1,0 +1,1 @@
+export { CBadge } from './CBadge'

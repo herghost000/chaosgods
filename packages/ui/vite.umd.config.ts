@@ -3,8 +3,9 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import viteAlias from '../../scripts/vite-alias'
 
-const baseUrl = fileURLToPath(new URL('../', import.meta.url))
+const baseUrl = fileURLToPath(new URL('./', import.meta.url))
 
 export default defineConfig({
   plugins: [
@@ -12,15 +13,10 @@ export default defineConfig({
     vueJsx(),
   ],
   resolve: {
-    // 因为我们的tov-ui-utils的库没有打包，所以我们可以考虑直接打包进去
-    alias: [
-      {
-        // 我们通过正则表达式去匹配以@tov-ui/utils的导入配置
-        find: /^@chaosgods\/utils/,
-        // 然后我们把路径替换成绝对路径地址
-        replacement: path.resolve(baseUrl, 'utils/src'),
-      },
-    ],
+    alias: [...viteAlias, {
+      find: /^@(?=\/)/,
+      replacement: path.resolve(baseUrl, 'src'),
+    }],
   },
   build: {
     rollupOptions: {

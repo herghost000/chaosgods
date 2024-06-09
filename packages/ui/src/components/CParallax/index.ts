@@ -1,0 +1,1 @@
+export { CParallax } from './CParallax'

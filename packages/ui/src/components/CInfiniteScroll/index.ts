@@ -1,0 +1,1 @@
+export { CInfiniteScroll } from './CInfiniteScroll'

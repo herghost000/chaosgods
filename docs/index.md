@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: "CHAOSGODS DOCS"
+  name: "CHAOS DOCS"
   text: "面向设计师和开发者"
   tagline: 只有你不知道，没有你找不到的物料
   actions:

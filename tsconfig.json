@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "jsx": "preserve",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "useDefineForClassFields": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "baseUrl": ".",
     "module": "ESNext",
-
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "paths": {
       "@chaosgods/*": ["packages/*/src"]
@@ -15,17 +15,26 @@
     "resolveJsonModule": true,
     "types": ["vitest/globals"],
     "allowImportingTsExtensions": true,
-
-    /* Linting */
+    "allowJs": false,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "declaration": true,
+    "declarationMap": true,
     "noEmit": true,
+    "stripInternal": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": [
+    "node_modules"
+  ],
+  "vueCompilerOptions": {
+    "jsxSlots": true,
+    "strictTemplates": true
+  }
 }

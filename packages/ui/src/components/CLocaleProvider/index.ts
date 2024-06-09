@@ -1,0 +1,1 @@
+export { CLocaleProvider } from './CLocaleProvider'

@@ -1,12 +1,29 @@
 export interface EditorProps {
   components: ComponentData[]
   currentElement: string
+  //   page: PageData
+  copiedComponent?: ComponentData
+  histories?: HistoryProps[]
 }
 
 export interface ComponentData {
   props: { [key: string]: any }
   id: string
   name: string
+  // 图层隐藏
+  isHidden?: boolean
+  // 图层锁定
+  isLocked?: boolean
+  // 图层名称
+  layerName?: string
+}
+
+export interface HistoryProps {
+  id: string
+  componentId: string
+  type: 'add' | 'delete' | 'modity'
+  data: any
+  index?: number
 }
 
 export const testComponents: ComponentData[] = [

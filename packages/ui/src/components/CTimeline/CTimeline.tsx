@@ -1,0 +1,141 @@
+// Styles
+import './CTimeline.sass'
+
+// Composables
+import { computed, toRef } from 'vue'
+import type { Prop } from 'vue'
+import { makeCTimelineItemProps } from './CTimelineItem'
+import { makeComponentProps } from '@/composables/component'
+import { provideDefaults } from '@/composables/defaults'
+import { makeDensityProps, useDensity } from '@/composables/density'
+import { useRtl } from '@/composables/locale'
+import { makeTagProps } from '@/composables/tag'
+import { makeThemeProps, provideTheme } from '@/composables/theme'
+
+// Utilities
+import { convertToUnit, genericComponent, only, propsFactory, useRender } from '@/util'
+
+// Types
+
+export type TimelineDirection = 'vertical' | 'horizontal'
+export type TimelineSide = 'start' | 'end' | undefined
+export type TimelineAlign = 'center' | 'start'
+export type TimelineTruncateLine = 'start' | 'end' | 'both' | undefined
+
+export const makeVTimelineProps = propsFactory({
+  align: {
+    type: String,
+    default: 'center',
+    validator: (v: any) => ['center', 'start'].includes(v),
+  } as Prop<TimelineAlign>,
+  direction: {
+    type: String,
+    default: 'vertical',
+    validator: (v: any) => ['vertical', 'horizontal'].includes(v),
+  } as Prop<TimelineDirection>,
+  justify: {
+    type: String,
+    default: 'auto',
+    validator: (v: any) => ['auto', 'center'].includes(v),
+  },
+  side: {
+    type: String,
+    validator: (v: any) => v == null || ['start', 'end'].includes(v),
+  } as Prop<TimelineSide>,
+  lineThickness: {
+    type: [String, Number],
+    default: 2,
+  },
+  lineColor: String,
+  truncateLine: {
+    type: String,
+    validator: (v: any) => ['start', 'end', 'both'].includes(v),
+  } as Prop<TimelineTruncateLine>,
+
+  ...only(makeCTimelineItemProps({
+    lineInset: 0,
+  }), ['dotColor', 'fillDot', 'hideOpposite', 'iconColor', 'lineInset', 'size']),
+  ...makeComponentProps(),
+  ...makeDensityProps(),
+  ...makeTagProps(),
+  ...makeThemeProps(),
+}, 'CTimeline')
+
+export const CTimeline = genericComponent()({
+  name: 'CTimeline',
+
+  props: makeVTimelineProps(),
+
+  setup(props, { slots }) {
+    const { themeClasses } = provideTheme(props)
+    const { densityClasses } = useDensity(props)
+    const { rtlClasses } = useRtl()
+
+    provideDefaults({
+      CTimelineDivider: {
+        lineColor: toRef(props, 'lineColor'),
+      },
+      CTimelineItem: {
+        density: toRef(props, 'density'),
+        dotColor: toRef(props, 'dotColor'),
+        fillDot: toRef(props, 'fillDot'),
+        hideOpposite: toRef(props, 'hideOpposite'),
+        iconColor: toRef(props, 'iconColor'),
+        lineColor: toRef(props, 'lineColor'),
+        lineInset: toRef(props, 'lineInset'),
+        size: toRef(props, 'size'),
+      },
+    })
+
+    const sideClasses = computed(() => {
+      const side = props.side ? props.side : props.density !== 'default' ? 'end' : null
+
+      return side && `v-timeline--side-${side}`
+    })
+
+    const truncateClasses = computed(() => {
+      const classes = [
+        'v-timeline--truncate-line-start',
+        'v-timeline--truncate-line-end',
+      ]
+
+      switch (props.truncateLine) {
+        case 'both': return classes
+        case 'start': return classes[0]
+        case 'end': return classes[1]
+        default: return null
+      }
+    })
+
+    useRender(() => (
+      <props.tag
+        class={[
+          'v-timeline',
+          `v-timeline--${props.direction}`,
+          `v-timeline--align-${props.align}`,
+          `v-timeline--justify-${props.justify}`,
+          truncateClasses.value,
+          {
+            'v-timeline--inset-line': !!props.lineInset,
+          },
+          themeClasses.value,
+          densityClasses.value,
+          sideClasses.value,
+          rtlClasses.value,
+          props.class,
+        ]}
+        style={[
+          {
+            '--v-timeline-line-thickness': convertToUnit(props.lineThickness),
+          },
+          props.style,
+        ]}
+        v-slots={slots}
+      />
+    ))
+
+    return {}
+  },
+})
+
+export type CTimeline = InstanceType<typeof CTimeline>

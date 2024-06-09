@@ -1,0 +1,1 @@
+export { CProgressCircular } from './CProgressCircular'
