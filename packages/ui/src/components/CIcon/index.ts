@@ -1,2 +1,2 @@
 export { CIcon } from './CIcon'
-export { VComponentIcon, VSvgIcon, VLigatureIcon, VClassIcon } from '@/composables/icons'
+export { VComponentIcon, CSvgIcon, CLigatureIcon, CClassIcon } from '@/composables/icons'

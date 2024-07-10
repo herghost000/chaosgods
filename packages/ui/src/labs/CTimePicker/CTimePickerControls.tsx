@@ -129,7 +129,7 @@ export const CTimePickerControls = genericComponent()({
                       'v-time-picker-controls__ampm__btn': true,
                       'v-time-picker-controls__ampm__btn__active': props.period === 'am',
                     }}
-                    text={t('$vuetify.timePicker.am')}
+                    text={t('$chaos.timePicker.am')}
                     variant="tonal"
                     onClick={() => props.period !== 'am' ? emit('update:period', 'am') : null}
                   />
@@ -142,7 +142,7 @@ export const CTimePickerControls = genericComponent()({
                       'v-time-picker-controls__ampm__btn': true,
                       'v-time-picker-controls__ampm__btn__active': props.period === 'pm',
                     }}
-                    text={t('$vuetify.timePicker.pm')}
+                    text={t('$chaos.timePicker.pm')}
                     variant="tonal"
                     onClick={() => props.period !== 'pm' ? emit('update:period', 'pm') : null}
                   />

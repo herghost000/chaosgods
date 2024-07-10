@@ -5,8 +5,6 @@ import { CAlertTitle } from './CAlertTitle'
 import { CBtn } from '@/components/CBtn'
 import { CDefaultsProvider } from '@/components/CDefaultsProvider'
 import { CIcon } from '@/components/CIcon'
-
-// Composables
 import { useTextColor } from '@/composables/color'
 import { makeComponentProps } from '@/composables/component'
 import { makeDensityProps, useDensity } from '@/composables/density'

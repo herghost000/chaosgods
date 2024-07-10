@@ -19,7 +19,7 @@ export const CExpansionPanelText = genericComponent()({
     const expansionPanel = inject(CExpansionPanelSymbol)
 
     if (!expansionPanel)
-      throw new Error('[Vuetify] v-expansion-panel-text needs to be placed inside v-expansion-panel')
+      throw new Error('[Chaos] v-expansion-panel-text needs to be placed inside v-expansion-panel')
 
     const { hasContent, onAfterLeave } = useLazy(props, expansionPanel.isSelected)
 

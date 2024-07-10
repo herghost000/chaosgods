@@ -16,7 +16,7 @@ export const makeCCalendarHeaderProps = propsFactory({
   title: String,
   text: {
     type: String,
-    default: '$vuetify.calendar.today',
+    default: '$chaos.calendar.today',
   },
   viewMode: {
     type: String as PropType<'month' | 'week' | 'day'>,

@@ -1,3 +1,4 @@
+import { expect } from 'vitest'
 import { classicSelectStrategy, independentSelectStrategy, independentSingleSelectStrategy, leafSelectStrategy, leafSingleSelectStrategy } from '../selectStrategies'
 
 describe('selectStrategies', () => {
@@ -31,7 +32,6 @@ describe('selectStrategies', () => {
         parents,
         selected,
       })
-
       expect(selected).toEqual(new Map([
         ['2', 'on'],
         ['3', 'on'],

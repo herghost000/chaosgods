@@ -25,11 +25,11 @@ export type CStepperVerticalSlots = {
 export const makeCStepperVerticalProps = propsFactory({
   prevText: {
     type: String,
-    default: '$vuetify.stepper.prev',
+    default: '$chaos.stepper.prev',
   },
   nextText: {
     type: String,
-    default: '$vuetify.stepper.next',
+    default: '$chaos.stepper.next',
   },
 
   ...makeStepperProps(),

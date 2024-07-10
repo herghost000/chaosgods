@@ -1,4 +1,4 @@
-import { VSvgIcon } from '@/composables/icons'
+import { CSvgIcon } from '@/composables/icons'
 import type { IconAliases, IconSet } from '@/composables/icons'
 
 const aliases: IconAliases = {
@@ -44,7 +44,7 @@ const aliases: IconAliases = {
 }
 
 const mdi: IconSet = {
-  component: VSvgIcon,
+  component: CSvgIcon,
 }
 
 export { aliases, mdi }

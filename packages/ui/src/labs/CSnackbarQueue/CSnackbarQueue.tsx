@@ -37,7 +37,7 @@ export const makeCSnackbarQueueProps = propsFactory({
   closable: [Boolean, String],
   closeText: {
     type: String,
-    default: '$vuetify.dismiss',
+    default: '$chaos.dismiss',
   },
   modelValue: {
     type: Array as PropType<readonly (string | SnackbarMessage)[]>,

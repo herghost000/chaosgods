@@ -42,7 +42,7 @@ export const CWindowItem = genericComponent()({
     const { isBooted } = useSsrBoot()
 
     if (!window || !groupItem)
-      throw new Error('[Vuetify] CWindowItem must be used inside CWindow')
+      throw new Error('[Chaos] CWindowItem must be used inside CWindow')
 
     const isTransitioning = shallowRef(false)
     const hasTransition = computed(() => isBooted.value && (

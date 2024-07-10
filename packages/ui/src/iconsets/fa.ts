@@ -1,4 +1,4 @@
-import { VClassIcon } from '@/composables/icons'
+import { CClassIcon } from '@/composables/icons'
 
 import type { IconAliases, IconSet } from '@/composables/icons'
 
@@ -45,7 +45,7 @@ const aliases: IconAliases = {
 }
 
 const fa: IconSet = {
-  component: VClassIcon,
+  component: CClassIcon,
 }
 
 export { aliases, fa }

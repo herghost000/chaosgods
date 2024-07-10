@@ -51,7 +51,7 @@ export const CDateInput = genericComponent<CDateInputSlots>()({
         return null
 
       if (props.multiple === true)
-        return t('$vuetify.datePicker.itemsSelected', value.length)
+        return t('$chaos.datePicker.itemsSelected', value.length)
 
       if (props.multiple === 'range') {
         const start = value[0]

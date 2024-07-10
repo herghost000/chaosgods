@@ -101,8 +101,8 @@ export const VComponentIcon = genericComponent()({
   },
 })
 
-export const VSvgIcon = defineComponent({
-  name: 'VSvgIcon',
+export const CSvgIcon = defineComponent({
+  name: 'CSvgIcon',
 
   inheritAttrs: false,
 
@@ -133,8 +133,8 @@ export const VSvgIcon = defineComponent({
   },
 })
 
-export const VLigatureIcon = defineComponent({
-  name: 'VLigatureIcon',
+export const CLigatureIcon = defineComponent({
+  name: 'CLigatureIcon',
 
   props: makeIconProps(),
 
@@ -144,8 +144,8 @@ export const VLigatureIcon = defineComponent({
     }
   },
 })
-export const VClassIcon = defineComponent({
-  name: 'VClassIcon',
+export const CClassIcon = defineComponent({
+  name: 'CClassIcon',
 
   props: makeIconProps(),
 
@@ -159,10 +159,10 @@ export const VClassIcon = defineComponent({
 function genDefaults(): Record<string, IconSet> {
   return {
     svg: {
-      component: VSvgIcon,
+      component: CSvgIcon,
     },
     class: {
-      component: VClassIcon,
+      component: CClassIcon,
     },
   }
 }
@@ -221,7 +221,7 @@ export function useIcon(props: Ref<IconValue | undefined>) {
 
     if (Array.isArray(icon)) {
       return {
-        component: VSvgIcon,
+        component: CSvgIcon,
         icon,
       }
     }

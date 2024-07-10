@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import { VLigatureIcon } from '@/composables/icons'
+import { CLigatureIcon } from '@/composables/icons'
 import type { IconAliases, IconSet } from '@/composables/icons'
 
 const aliases: IconAliases = {
@@ -46,7 +46,7 @@ const aliases: IconAliases = {
 
 const md: IconSet = {
   // Not using mergeProps here, functional components merge props by default (?)
-  component: props => h(VLigatureIcon, { ...props, class: 'material-icons' }),
+  component: props => h(CLigatureIcon, { ...props, class: 'material-icons' }),
 }
 
 export { aliases, md }

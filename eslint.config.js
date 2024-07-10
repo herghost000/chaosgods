@@ -14,5 +14,7 @@ export default antfu({
     'ts/consistent-type-definitions': 'off',
     'ts/ban-types': 'off',
     'ts/no-redeclare': 'off',
+    'no-prototype-builtins': 'off',
+    'style/jsx-closing-tag-location': 'off',
   },
 })

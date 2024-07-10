@@ -56,7 +56,7 @@ export const CSliderThumb = genericComponent<CSliderThumbSlots>()({
     const slider = inject(CSliderSymbol)
     const { isRtl, rtlClasses } = useRtl()
     if (!slider)
-      throw new Error('[Vuetify] v-slider-thumb must be used inside v-slider or v-range-slider')
+      throw new Error('[Chaos] v-slider-thumb must be used inside v-slider or v-range-slider')
 
     const {
       thumbColor,

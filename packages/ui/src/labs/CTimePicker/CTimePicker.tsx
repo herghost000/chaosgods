@@ -39,7 +39,7 @@ export const makeCTimePickerProps = propsFactory({
   readonly: Boolean,
   scrollable: Boolean,
   useSeconds: Boolean,
-  ...omit(makeCPickerProps({ title: '$vuetify.timePicker.title' }), ['landscape']),
+  ...omit(makeCPickerProps({ title: '$chaos.timePicker.title' }), ['landscape']),
 }, 'CTimePicker')
 
 export const CTimePicker = genericComponent<CTimePickerSlots>()({

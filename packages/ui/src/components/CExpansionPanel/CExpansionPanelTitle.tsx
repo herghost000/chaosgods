@@ -55,7 +55,7 @@ export const CExpansionPanelTitle = genericComponent<CExpansionPanelTitleSlots>(
     const expansionPanel = inject(CExpansionPanelSymbol)
 
     if (!expansionPanel)
-      throw new Error('[Vuetify] v-expansion-panel-title needs to be placed inside v-expansion-panel')
+      throw new Error('[Chaos] v-expansion-panel-title needs to be placed inside v-expansion-panel')
 
     const { backgroundColorClasses, backgroundColorStyles } = useBackgroundColor(props, 'color')
 

@@ -35,7 +35,7 @@ export const CSliderTrack = genericComponent<CSliderTrackSlots>()({
     const slider = inject(CSliderSymbol)
 
     if (!slider)
-      throw new Error('[Vuetify] v-slider-track must be inside v-slider or v-range-slider')
+      throw new Error('[Chaos] v-slider-track must be inside v-slider or v-range-slider')
 
     const {
       color,
